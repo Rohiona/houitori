@@ -1,4 +1,4 @@
-import { Month, StarNumber, STAR_NAMES, StarName, KigakuResult } from "./types";
+import { Month, StarNumber } from "./types";
 
 /**
  * 生年から本命星を計算する
@@ -54,32 +54,3 @@ export function calculateGetsumeiSei(
   return table[birthMonth - 1];
 }
 
-/**
- * 星の番号から名称を取得する
- * @param starNumber 星の番号（1-9）
- * @returns 星の名称
- */
-export function getStarName(starNumber: StarNumber): StarName {
-  return STAR_NAMES[starNumber];
-}
-
-/**
- * 生年月から九星気学の結果を計算する
- * @param birthYear 生年（西暦4桁）
- * @param birthMonth 生月（1-12）
- * @returns 計算結果
- */
-export function calculateKigaku(
-  birthYear: number,
-  birthMonth: Month
-): KigakuResult {
-  const honmeiSei = calculateHonmeiSei(birthYear);
-  const getsumeiSei = calculateGetsumeiSei(honmeiSei, birthMonth);
-
-  return {
-    honmeiSei,
-    getsumeiSei,
-    honmeiName: getStarName(honmeiSei),
-    getsumeiName: getStarName(getsumeiSei),
-  };
-}

@@ -2,8 +2,6 @@ import { describe, it, expect } from "vitest";
 import {
   calculateHonmeiSei,
   calculateGetsumeiSei,
-  getStarName,
-  calculateKigaku,
 } from "./calculator";
 
 describe("calculateHonmeiSei", () => {
@@ -69,29 +67,4 @@ describe("calculateGetsumeiSei", () => {
   });
 });
 
-describe("getStarName", () => {
-  it("should return correct star names", () => {
-    expect(getStarName(1)).toBe("一白水星");
-    expect(getStarName(2)).toBe("二黒土星");
-    expect(getStarName(3)).toBe("三碧木星");
-    expect(getStarName(4)).toBe("四緑木星");
-    expect(getStarName(5)).toBe("五黄土星");
-    expect(getStarName(6)).toBe("六白金星");
-    expect(getStarName(7)).toBe("七赤金星");
-    expect(getStarName(8)).toBe("八白土星");
-    expect(getStarName(9)).toBe("九紫火星");
-  });
-});
 
-describe("calculateKigaku", () => {
-  it("should return complete kigaku result", () => {
-    const result = calculateKigaku(1985, 6);
-
-    expect(result).toEqual({
-      honmeiSei: 6,
-      getsumeiSei: 1,
-      honmeiName: "六白金星",
-      getsumeiName: "一白水星",
-    });
-  });
-});
