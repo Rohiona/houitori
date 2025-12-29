@@ -1,8 +1,8 @@
 import { describe, it, expect } from "vitest";
-import { CalculateKigakuUseCase } from "./CalculateKigakuUseCase";
+import { PersonalStarCalculationUseCase } from "./PersonalStarCalculationUseCase";
 
-describe("CalculateKigakuUseCase", () => {
-  const useCase = new CalculateKigakuUseCase();
+describe("PersonalStarCalculationUseCase", () => {
+  const useCase = new PersonalStarCalculationUseCase();
 
   it("should return complete kigaku result", () => {
     const result = useCase.execute(1985, 6);

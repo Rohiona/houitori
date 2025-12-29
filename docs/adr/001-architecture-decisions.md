@@ -20,11 +20,12 @@ This document explains the architectural decisions made and, importantly, the de
 
 ```
 src/
-├── app/                    # Presentation (Next.js)
+├── app/                        # Presentation (Next.js)
 └── modules/
-    ├── domain/             # Business logic
-    ├── application/        # Use cases
-    └── infrastructure/     # External services (currently empty)
+    ├── domain/
+    │   └── personal/           # Personal star (services/ + types/)
+    ├── application/usecases/   # Use cases
+    └── infrastructure/         # External services (currently empty)
 ```
 
 **Rationale**:

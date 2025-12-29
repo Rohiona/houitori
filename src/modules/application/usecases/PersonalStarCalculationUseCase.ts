@@ -1,12 +1,12 @@
 import {
   calculateHonmeiSei,
   calculateGetsumeiSei,
-} from "@/modules/domain/kigaku/calculator";
-import { getStarName } from "@/modules/domain/kigaku/starName";
-import type { Month, KigakuResult } from "@/modules/domain/kigaku/types";
+} from "@/modules/domain/personal/services/calculator";
+import { getStarName } from "@/modules/domain/personal/services/starName";
+import type { Month, KigakuResult } from "@/modules/domain/personal/types";
 
 /**
- * 九星気学計算ユースケース
+ * 個人の星（本命星・月命星）計算ユースケース
  *
  * ドメインサービスを組み合わせて結果を組み立てる。
  * Application層の責務:
@@ -14,7 +14,7 @@ import type { Month, KigakuResult } from "@/modules/domain/kigaku/types";
  * - トランザクション管理
  * - 外部サービス連携
  */
-export class CalculateKigakuUseCase {
+export class PersonalStarCalculationUseCase {
   execute(birthYear: number, birthMonth: Month): KigakuResult {
     const honmeiSei = calculateHonmeiSei(birthYear);
     const getsumeiSei = calculateGetsumeiSei(honmeiSei, birthMonth);

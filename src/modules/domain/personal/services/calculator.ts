@@ -1,4 +1,4 @@
-import { Month, StarNumber } from "./types";
+import { Month, StarNumber } from "../types";
 
 /**
  * 生年から本命星を計算する

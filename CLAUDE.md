@@ -18,21 +18,43 @@ make clean    # Remove containers, images, volumes
 
 ## Architecture
 
+Clean Architecture with three layers:
+
 ```
 src/
-├── app/                    # Next.js App Router
-│   ├── api/kigaku/         # API routes (GET/POST)
-│   └── page.tsx            # Main page
-└── domain/kigaku/          # Core calculation logic (pure functions)
-    ├── calculator.ts       # calculateHonmeiSei, calculateGetsumeiSei, calculateKigaku
-    ├── types.ts            # StarNumber, Month, KigakuResult, STAR_NAMES
-    └── index.ts            # Public exports
+├── app/                                        # Presentation Layer (Next.js)
+│   ├── api/personal/route.ts                   # REST API (GET/POST)
+│   └── page.tsx                                # Main page
+│
+└── modules/
+    ├── domain/
+    │   └── personal/                           # Personal star (本命星・月命星)
+    │       ├── services/
+    │       │   ├── calculator.ts               # calculateHonmeiSei, calculateGetsumeiSei
+    │       │   └── starName.ts                 # getStarName
+    │       └── types/
+    │           └── index.ts                    # StarNumber, Month, KigakuResult
+    │
+    ├── application/usecases/                   # Application Layer
+    │   └── PersonalStarCalculationUseCase.ts   # Orchestration
+    │
+    └── infrastructure/                         # Infrastructure Layer (future use)
 ```
 
 ### Key Modules
 
-- **`src/domain/kigaku/`**: Pure calculation functions with no side effects. Import from `@/domain/kigaku`.
-- **`src/app/api/kigaku/route.ts`**: REST API supporting both GET (query params) and POST (JSON body).
+- **`src/modules/domain/personal/`**: Personal star calculation (pure functions). Contains `services/` and `types/`.
+- **`src/modules/application/usecases/`**: Use cases that orchestrate domain functions.
+- **`src/app/api/personal/route.ts`**: REST API supporting both GET (query params) and POST (JSON body).
+
+### Import Examples
+
+```typescript
+import { PersonalStarCalculationUseCase } from "@/modules/application/usecases/PersonalStarCalculationUseCase";
+import { calculateHonmeiSei } from "@/modules/domain/personal/services/calculator";
+import { getStarName } from "@/modules/domain/personal/services/starName";
+import type { Month, KigakuResult } from "@/modules/domain/personal/types";
+```
 
 ### Type System
 
@@ -42,7 +64,10 @@ src/
 
 ## Testing
 
-Tests are in `*.test.ts` files next to the source. Run a single test file:
+Tests are co-located with source files (`*.test.ts`). Run a single test file:
 ```bash
-pnpm vitest run src/domain/kigaku/calculator.test.ts
+make test  # Run all tests
+
+# Or run specific test file:
+docker compose run --rm web pnpm vitest run src/modules/domain/personal/services/calculator.test.ts
 ```

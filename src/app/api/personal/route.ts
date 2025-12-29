@@ -1,17 +1,17 @@
 import { NextRequest } from "next/server";
-import { CalculateKigakuUseCase } from "@/modules/application/kigaku/usecases/CalculateKigakuUseCase";
-import type { Month } from "@/modules/domain/kigaku/types";
+import { PersonalStarCalculationUseCase } from "@/modules/application/usecases/PersonalStarCalculationUseCase";
+import type { Month } from "@/modules/domain/personal/types";
 
-const calculateKigakuUseCase = new CalculateKigakuUseCase();
+const personalStarCalculationUseCase = new PersonalStarCalculationUseCase();
 
-interface KigakuRequest {
+interface PersonalStarRequest {
   birthYear: number;
   birthMonth: number;
 }
 
 export async function POST(request: NextRequest) {
   try {
-    const body: KigakuRequest = await request.json();
+    const body: PersonalStarRequest = await request.json();
     const { birthYear, birthMonth } = body;
 
     // Validation
@@ -36,11 +36,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const result = calculateKigakuUseCase.execute(birthYear, birthMonth as Month);
+    const result = personalStarCalculationUseCase.execute(birthYear, birthMonth as Month);
 
     return Response.json(result);
   } catch (error) {
-    console.error("Kigaku calculation error:", error);
+    console.error("Personal star calculation error:", error);
     return Response.json(
       { error: "Internal server error" },
       { status: 500 }
@@ -77,7 +77,7 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  const result = calculateKigakuUseCase.execute(year, month as Month);
+  const result = personalStarCalculationUseCase.execute(year, month as Month);
 
   return Response.json(result);
 }

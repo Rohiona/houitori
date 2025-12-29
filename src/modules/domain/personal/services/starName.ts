@@ -1,4 +1,4 @@
-import { StarNumber, STAR_NAMES, StarName } from "./types";
+import { StarNumber, STAR_NAMES, StarName } from "../types";
 
 /**
  * 星の番号から名称を取得する

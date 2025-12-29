@@ -20,11 +20,12 @@ Houitori は九星気学の計算を行うWebアプリケーションです。�
 
 ```
 src/
-├── app/                    # Presentation層 (Next.js)
+├── app/                        # Presentation層 (Next.js)
 └── modules/
-    ├── domain/             # ビジネスロジック
-    ├── application/        # ユースケース
-    └── infrastructure/     # 外部サービス連携（現在は空）
+    ├── domain/
+    │   └── personal/           # 個人の星 (services/ + types/)
+    ├── application/usecases/   # ユースケース
+    └── infrastructure/         # 外部サービス連携（現在は空）
 ```
 
 **理由**:

@@ -47,20 +47,20 @@ The application will be available at `http://localhost:3000`.
 
 ## API Endpoints
 
-### GET /api/kigaku
+### GET /api/personal
 
-Calculate Nine Star Ki from query parameters.
+Calculate personal stars from query parameters.
 
 ```bash
-curl "http://localhost:3000/api/kigaku?birthYear=1985&birthMonth=6"
+curl "http://localhost:3000/api/personal?birthYear=1985&birthMonth=6"
 ```
 
-### POST /api/kigaku
+### POST /api/personal
 
-Calculate Nine Star Ki from JSON body.
+Calculate personal stars from JSON body.
 
 ```bash
-curl -X POST http://localhost:3000/api/kigaku \
+curl -X POST http://localhost:3000/api/personal \
   -H "Content-Type: application/json" \
   -d '{"birthYear": 1985, "birthMonth": 6}'
 ```
@@ -78,17 +78,27 @@ curl -X POST http://localhost:3000/api/kigaku \
 
 ## Project Structure
 
+Clean Architecture with three layers:
+
 ```
 src/
-├── app/
-│   ├── api/
-│   │   └── kigaku/       # API routes
-│   └── page.tsx          # Main page
-└── domain/
-    └── kigaku/           # Core calculation logic
-        ├── calculator.ts
-        ├── types.ts
-        └── index.ts
+├── app/                                  # Presentation Layer (Next.js)
+│   ├── api/personal/route.ts             # REST API (GET/POST)
+│   └── page.tsx                          # Main page
+│
+└── modules/
+    ├── domain/
+    │   └── personal/                     # Personal star (本命星・月命星)
+    │       ├── services/
+    │       │   ├── calculator.ts         # calculateHonmeiSei, calculateGetsumeiSei
+    │       │   └── starName.ts           # getStarName
+    │       └── types/
+    │           └── index.ts              # StarNumber, Month, KigakuResult
+    │
+    ├── application/usecases/             # Application Layer
+    │   └── PersonalStarCalculationUseCase.ts  # Orchestration
+    │
+    └── infrastructure/                   # Infrastructure Layer (future use)
 ```
 
 ## License

@@ -47,20 +47,20 @@ make build    # 本番ビルド
 
 ## APIエンドポイント
 
-### GET /api/kigaku
+### GET /api/personal
 
-クエリパラメータから九星を計算します。
+クエリパラメータから個人の星を計算します。
 
 ```bash
-curl "http://localhost:3000/api/kigaku?birthYear=1985&birthMonth=6"
+curl "http://localhost:3000/api/personal?birthYear=1985&birthMonth=6"
 ```
 
-### POST /api/kigaku
+### POST /api/personal
 
-JSONボディから九星を計算します。
+JSONボディから個人の星を計算します。
 
 ```bash
-curl -X POST http://localhost:3000/api/kigaku \
+curl -X POST http://localhost:3000/api/personal \
   -H "Content-Type: application/json" \
   -d '{"birthYear": 1985, "birthMonth": 6}'
 ```
@@ -78,17 +78,27 @@ curl -X POST http://localhost:3000/api/kigaku \
 
 ## プロジェクト構成
 
+クリーンアーキテクチャによる3層構造:
+
 ```
 src/
-├── app/
-│   ├── api/
-│   │   └── kigaku/       # APIルート
-│   └── page.tsx          # メインページ
-└── domain/
-    └── kigaku/           # 計算ロジック
-        ├── calculator.ts
-        ├── types.ts
-        └── index.ts
+├── app/                                  # プレゼンテーション層 (Next.js)
+│   ├── api/personal/route.ts             # REST API (GET/POST)
+│   └── page.tsx                          # メインページ
+│
+└── modules/
+    ├── domain/
+    │   └── personal/                     # 個人の星 (本命星・月命星)
+    │       ├── services/
+    │       │   ├── calculator.ts         # calculateHonmeiSei, calculateGetsumeiSei
+    │       │   └── starName.ts           # getStarName
+    │       └── types/
+    │           └── index.ts              # StarNumber, Month, KigakuResult
+    │
+    ├── application/usecases/             # アプリケーション層
+    │   └── PersonalStarCalculationUseCase.ts  # オーケストレーション
+    │
+    └── infrastructure/                   # インフラ層 (将来用)
 ```
 
 ## ライセンス
