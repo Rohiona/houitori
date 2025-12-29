@@ -37,14 +37,10 @@
 ### 開発環境の起動
 
 ```bash
-# 開発サーバーを起動
-docker compose up
-
-# テストを実行
-docker compose exec web pnpm test
-
-# Lintを実行
-docker compose exec web pnpm lint
+make dev      # 開発サーバーを起動
+make test     # テストを実行
+make lint     # Lintを実行
+make build    # 本番ビルド
 ```
 
 アプリケーションは `http://localhost:3000` で利用できます。
@@ -88,12 +84,11 @@ src/
 │   ├── api/
 │   │   └── kigaku/       # APIルート
 │   └── page.tsx          # メインページ
-├── lib/
-│   └── kigaku/           # 計算ロジック
-│       ├── calculator.ts
-│       ├── types.ts
-│       └── index.ts
-└── data/                 # 静的データ（予定）
+└── domain/
+    └── kigaku/           # 計算ロジック
+        ├── calculator.ts
+        ├── types.ts
+        └── index.ts
 ```
 
 ## ライセンス

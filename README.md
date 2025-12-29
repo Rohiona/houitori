@@ -37,14 +37,10 @@ The nine stars are:
 ### Development
 
 ```bash
-# Start development server
-docker compose up
-
-# Run tests
-docker compose exec web pnpm test
-
-# Run linter
-docker compose exec web pnpm lint
+make dev      # Start development server
+make test     # Run tests
+make lint     # Run linter
+make build    # Production build
 ```
 
 The application will be available at `http://localhost:3000`.
@@ -88,12 +84,11 @@ src/
 │   ├── api/
 │   │   └── kigaku/       # API routes
 │   └── page.tsx          # Main page
-├── lib/
-│   └── kigaku/           # Core calculation logic
-│       ├── calculator.ts
-│       ├── types.ts
-│       └── index.ts
-└── data/                 # Static data (future)
+└── domain/
+    └── kigaku/           # Core calculation logic
+        ├── calculator.ts
+        ├── types.ts
+        └── index.ts
 ```
 
 ## License

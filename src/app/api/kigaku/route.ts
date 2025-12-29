@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { calculateKigaku, Month } from "@/lib/kigaku";
+import { calculateKigaku, Month } from "@/domain/kigaku";
 
 interface KigakuRequest {
   birthYear: number;
