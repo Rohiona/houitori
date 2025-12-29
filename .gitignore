@@ -25,6 +25,7 @@
 *.pem
 .idea/
 .pnpm-store/
+.serena/
 
 # debug
 npm-debug.log*
