@@ -1,5 +1,7 @@
 # Houitori - Kigaku (Nine Star Ki) Calculator
 
+**[日本語](README.ja.md)**
+
 A web application that calculates your Nine Star Ki (Kigaku) fortune based on your birth year and month. Built with Next.js 16 and TypeScript.
 
 ## What is Nine Star Ki (Kigaku)?
@@ -47,9 +49,9 @@ docker compose exec web pnpm lint
 
 The application will be available at `http://localhost:3000`.
 
-### API Endpoints
+## API Endpoints
 
-#### GET /api/kigaku
+### GET /api/kigaku
 
 Calculate Nine Star Ki from query parameters.
 
@@ -57,7 +59,7 @@ Calculate Nine Star Ki from query parameters.
 curl "http://localhost:3000/api/kigaku?birthYear=1985&birthMonth=6"
 ```
 
-#### POST /api/kigaku
+### POST /api/kigaku
 
 Calculate Nine Star Ki from JSON body.
 
