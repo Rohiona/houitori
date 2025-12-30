@@ -1,4 +1,7 @@
-.PHONY: dev test lint format format-check build clean
+.PHONY: setup dev test lint format format-check build clean
+
+setup:
+	git config core.hooksPath .githooks
 
 dev:
 	docker compose up

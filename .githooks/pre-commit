@@ -1,0 +1,5 @@
+#!/bin/sh
+
+# Run prettier check inside Docker container
+# If formatting issues are found, commit will be rejected
+docker compose run --rm web sh -c "pnpm install --frozen-lockfile && pnpm format:check"
