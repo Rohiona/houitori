@@ -7,19 +7,19 @@ dev:
 	docker compose up
 
 test:
-	docker compose run --rm web pnpm test:run
+	docker compose exec web pnpm test:run
 
 lint:
-	docker compose run --rm web pnpm lint
+	docker compose exec web pnpm lint
 
 format:
-	docker compose run --rm web pnpm format
+	docker compose exec web pnpm format
 
 format-check:
-	docker compose run --rm web pnpm format:check
+	docker compose exec web pnpm format:check
 
 build:
-	docker compose run --rm web pnpm build
+	docker compose exec web pnpm build
 
 clean:
 	docker compose down --rmi local --volumes
