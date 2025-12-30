@@ -1,11 +1,6 @@
 import { buildBoardDirectionResult } from "@/modules/application/services/direction/BoardDirectionResultBuilder";
-import type {
-  StarNumber,
-  BoardData,
-  MonthDirections,
-  YearDirectionResult,
-  CompatibilityTable,
-} from "@/modules/domain/direction/types";
+import type { StarNumber, BoardData, CompatibilityTable } from "@/modules/domain/direction";
+import type { MonthDirections, YearDirectionResult } from "@/modules/application/dtos/direction";
 
 /**
  * 年間の方位吉凶計算ユースケース

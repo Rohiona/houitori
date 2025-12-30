@@ -2,7 +2,7 @@
 
 ## ステータス
 
-承認済み
+承認済み（更新: 2024-12）
 
 ## コンテキスト
 
@@ -10,6 +10,7 @@ Houitori は九星気学の計算を行うWebアプリケーションです。�
 
 - 入力: 生年・生月
 - 出力: 本命星・月命星（番号と日本語名）
+- 方位の吉凶計算
 - データベースなし、外部API呼び出しなし、ユーザー認証なし
 
 本ドキュメントでは、採用したアーキテクチャ上の決定と、**採用しなかった決定**について説明します。
@@ -22,12 +23,17 @@ Houitori は九星気学の計算を行うWebアプリケーションです。�
 
 ```
 src/
-├── app/                        # Presentation層 (Next.js)
+├── app/                              # Presentation層 (Next.js)
 └── modules/
     ├── domain/
-    │   └── personal/           # 個人の星 (services/ + types/)
-    ├── application/usecases/   # ユースケース
-    └── infrastructure/         # 外部サービス連携（現在は空）
+    │   ├── shared/                   # 共有カーネル (StarNumber, Month)
+    │   ├── personal/                 # 個人の星 (services/ + types/)
+    │   └── direction/                # 方位の吉凶 (rules/ + services/)
+    ├── application/
+    │   ├── dtos/                     # DTO（API出力形式）
+    │   ├── services/                 # アプリケーションサービス
+    │   └── usecases/                 # ユースケース
+    └── infrastructure/               # 外部サービス連携（現在は空）
 ```
 
 **理由**:
@@ -41,7 +47,62 @@ src/
 
 ---
 
-### 2. DIコンテナ（不採用）
+### 2. 公開API（index.ts）経由でのインポート（採用）
+
+**決定**: 各ドメインモジュールは `index.ts` を通じて公開APIを提供する。Application層は公開APIからのみインポートする。
+
+```typescript
+// Good: 公開API経由でインポート
+import { calculateHonmeiSei, type Month } from "@/modules/domain/personal";
+import { decideDirectionStatus, type BoardData } from "@/modules/domain/direction";
+
+// Avoid: 深いパスでのインポート（テスト以外）
+import { calculateHonmeiSei } from "@/modules/domain/personal/services/calculator";
+```
+
+**理由**:
+
+- 層間の境界が明確
+- ドメイン内部（例: `rules/`）をApplication層から隠蔽
+- モジュール内部のリファクタリングが利用側に影響しにくい
+- テストでは内部関数の単体テストのために深いインポートを許可
+
+**トレードオフ**: `index.ts` のエクスポート管理が必要だが、カプセル化のメリットが上回る。
+
+---
+
+### 3. クロスドメイン型のための共有カーネル（採用）
+
+**決定**: 複数ドメインで使用される共通型（StarNumber, Month）は `domain/shared/` に配置する。
+
+```
+domain/
+├── shared/           # StarNumber, Month, STAR_NAMES
+├── personal/         # 共有型を使用
+└── direction/        # 共有型を使用
+```
+
+**理由**:
+
+- 共有概念への依存が明示的
+- personal と direction ドメイン間の循環依存を回避
+- Domain-Driven Design の「共有カーネル」パターンに準拠
+
+---
+
+### 4. Application層でのDTO管理（採用）
+
+**決定**: API出力型（DirectionResult, YearDirectionResult）は `application/dtos/` に配置し、ドメイン層には置かない。
+
+**理由**:
+
+- ドメイン層はAPI形式ではなくビジネスロジックに集中
+- DTOはドメインモデルとは独立して変更可能
+- 明確な分離: ドメイン型は計算用、DTOはAPI出力用
+
+---
+
+### 5. DIコンテナ（不採用）
 
 **決定**: DIコンテナ（tsyringe, inversify 等）を使用しない。
 
@@ -68,17 +129,11 @@ class CalculateKigakuUseCase {
 }
 ```
 
-**DIが必要になるケース**:
-
-- `KigakuRepository` を導入してDBに計算結果を保存する場合
-- 外部の暦APIを呼び出して節入り日を取得する場合
-- これらの依存をテスト時にモックに差し替えたい場合
-
 **再検討のタイミング**: I/Oを伴う依存が追加され、テスト時にモックが必要になった場合。
 
 ---
 
-### 3. Result型 / Eitherパターン（不採用）
+### 6. Result型 / Eitherパターン（不採用）
 
 **決定**: Result/Either型ではなく、従来の `throw` によるエラーハンドリングを採用。
 
@@ -89,21 +144,11 @@ class CalculateKigakuUseCase {
 - TypeScriptの型システムはResultのハンドリングを強制しない
 - 得られるメリットに対して認知的オーバーヘッドが大きい
 
-```typescript
-// 現状: 明確でイディオマティック
-if (birthYear < 1900) {
-  throw new Error("生年は1900年以降の整数を指定してください");
-}
-
-// このアプリには過剰
-function calculateHonmeiSei(year: number): Result<StarNumber, ValidationError>;
-```
-
 **再検討のタイミング**: 複数のエラー型が必要になった場合、またはエラーが例外ではなく期待される結果となる場合。
 
 ---
 
-### 4. zodによる入力バリデーション（不採用）
+### 7. zodによる入力バリデーション（不採用）
 
 **決定**: スキーマバリデーションライブラリではなく、APIルート内での手動バリデーションを採用。
 
@@ -118,29 +163,7 @@ function calculateHonmeiSei(year: number): Result<StarNumber, ValidationError>;
 
 ---
 
-### 5. バレルファイル / Index エクスポート（不採用）
-
-**決定**: index.ts での再エクスポートではなく、ソースファイルからの直接インポートを採用。
-
-```typescript
-// 採用: 直接インポート
-import { calculateHonmeiSei } from "@/modules/domain/kigaku/calculator";
-import type { Month } from "@/modules/domain/kigaku/types";
-
-// 不採用: バレルファイル
-import { calculateHonmeiSei, Month } from "@/modules/domain/kigaku";
-```
-
-**理由**:
-
-- 依存関係が明示的でわかりやすい
-- Tree-shakingが効きやすい
-- 循環依存の問題を回避できる
-- IDEのナビゲーションが直接ソースに到達する
-
----
-
-### 6. calculator と starName の分離（採用）
+### 8. calculator と starName の分離（採用）
 
 **決定**: 純粋な計算ロジック（`calculator.ts`）と名前マッピング（`starName.ts`）を分離。
 
@@ -151,6 +174,26 @@ import { calculateHonmeiSei, Month } from "@/modules/domain/kigaku";
 - `starName.ts`: ローカライゼーションの関心事（将来: 多言語対応）
 - 個別にテストしやすい
 - i18n対応時の明確な拡張ポイント
+
+---
+
+### 9. ルールベースのドメインロジック（採用）
+
+**決定**: 方位の吉凶ロジックを小さな純粋関数「ルール」に分割し、`domain/direction/rules/` に配置。
+
+```
+rules/
+├── killingRule.ts    # 本命殺・月命殺・的殺
+├── badRule.ts        # 五黄殺・暗剣殺
+└── goodRule.ts       # 相性による吉方位
+```
+
+**理由**:
+
+- 各ルールが単一責任を持つ
+- 各ルールを単独でテストしやすい
+- ルールは `statusDecider.ts` で集約
+- 既存コードを変更せずに新しいルールを追加可能
 
 ---
 
@@ -174,6 +217,7 @@ import { calculateHonmeiSei, Month } from "@/modules/domain/kigaku";
 - 開発イテレーションが速い
 - 新規参画者のオンボーディングが容易
 - 不要な抽象化がない
+- 層間の境界が明確
 
 ### ネガティブ
 

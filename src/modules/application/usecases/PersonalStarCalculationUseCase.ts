@@ -1,9 +1,10 @@
 import {
   calculateHonmeiSei,
   calculateGetsumeiSei,
-} from "@/modules/domain/personal/services/calculator";
-import { getStarName } from "@/modules/domain/personal/services/starName";
-import type { Month, KigakuResult } from "@/modules/domain/personal/types";
+  getStarName,
+  type Month,
+  type KigakuResult,
+} from "@/modules/domain/personal";
 
 /**
  * 個人の星（本命星・月命星）計算ユースケース

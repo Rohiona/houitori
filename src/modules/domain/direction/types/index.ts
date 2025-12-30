@@ -1,4 +1,11 @@
-import type { StarNumber, Month } from "../../personal/types";
+/**
+ * Direction Domain Types
+ *
+ * 方位判定ドメインの型定義
+ * ビジネスロジックに必要な概念のみを定義
+ */
+
+import type { StarNumber } from "../../shared/types";
 
 /**
  * 方角番号（1-8）
@@ -57,6 +64,10 @@ export interface DirectionCell {
 
 /**
  * 盤データ（年盤または月盤）
+ *
+ * Note: Record<string, ...> としているのはJSONパース時の都合。
+ * 実際には DirectionNumber("1"〜"8") のキーのみを持つことを期待。
+ * ランタイムバリデーションはデータ読み込み層で行う想定。
  */
 export type BoardDirections = Record<string, DirectionCell>;
 
@@ -70,43 +81,10 @@ export interface BoardData {
 }
 
 /**
- * 吉凶判定結果
- */
-export interface DirectionResultStatus {
-  status: DirectionStatus;
-}
-
-/**
- * 方位ごとの判定結果
- */
-export interface DirectionResult {
-  direction: DirectionNumber;
-  star: StarNumber;
-  honmeiResult: DirectionResultStatus;
-  getsumeiResult: DirectionResultStatus;
-}
-
-/**
- * 月ごとの方位判定結果
- */
-export interface MonthDirections {
-  directions: DirectionResult[];
-}
-
-/**
- * 年間の方位判定結果（API出力形式）
- */
-export interface YearDirectionResult {
-  year: number;
-  directions: DirectionResult[]; // 年盤
-  months: Record<string, MonthDirections>; // 月盤（"1"〜"12"）
-}
-
-/**
  * 吉方位判定テーブル（五行シート）
  * キー: 本命星/月命星, 値: 吉となる星の配列
  */
 export type CompatibilityTable = Record<string, StarNumber[]>;
 
-// Re-export for convenience
-export type { StarNumber, Month };
+// Re-export shared types for convenience
+export type { StarNumber, Month } from "../../shared/types";

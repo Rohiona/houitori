@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted
+Accepted (Updated: 2024-12)
 
 ## Context
 
@@ -10,6 +10,7 @@ Houitori is a Nine Star Ki (九星気学) calculator web application. The core f
 
 - Input: Birth year and month
 - Output: Honmei-sei (本命星) and Getsumei-sei (月命星) with their Japanese names
+- Direction fortune calculation (方位の吉凶)
 - No database, no external API calls, no user authentication
 
 This document explains the architectural decisions made and, importantly, the decisions to NOT adopt certain patterns.
@@ -22,12 +23,17 @@ This document explains the architectural decisions made and, importantly, the de
 
 ```
 src/
-├── app/                        # Presentation (Next.js)
+├── app/                              # Presentation (Next.js)
 └── modules/
     ├── domain/
-    │   └── personal/           # Personal star (services/ + types/)
-    ├── application/usecases/   # Use cases
-    └── infrastructure/         # External services (currently empty)
+    │   ├── shared/                   # Shared Kernel (StarNumber, Month)
+    │   ├── personal/                 # Personal star (services/ + types/)
+    │   └── direction/                # Direction fortune (rules/ + services/)
+    ├── application/
+    │   ├── dtos/                     # DTOs (API output format)
+    │   ├── services/                 # Application services
+    │   └── usecases/                 # Use cases
+    └── infrastructure/               # External services (currently empty)
 ```
 
 **Rationale**:
@@ -41,7 +47,62 @@ src/
 
 ---
 
-### 2. Dependency Injection Container (NOT Adopted)
+### 2. Public API via index.ts (Adopted)
+
+**Decision**: Each domain module exposes a public API through `index.ts`. Application layer imports from public API only.
+
+```typescript
+// Good: Import from public API
+import { calculateHonmeiSei, type Month } from "@/modules/domain/personal";
+import { decideDirectionStatus, type BoardData } from "@/modules/domain/direction";
+
+// Avoid: Deep imports (except for tests)
+import { calculateHonmeiSei } from "@/modules/domain/personal/services/calculator";
+```
+
+**Rationale**:
+
+- Clear boundary between layers
+- Domain internals (e.g., `rules/`) are hidden from Application layer
+- Easier refactoring within a module without breaking consumers
+- Tests may use deep imports for unit testing internal functions
+
+**Trade-off**: Requires maintaining `index.ts` exports, but provides better encapsulation.
+
+---
+
+### 3. Shared Kernel for Cross-Domain Types (Adopted)
+
+**Decision**: Common types used by multiple domains (StarNumber, Month) are placed in `domain/shared/`.
+
+```
+domain/
+├── shared/           # StarNumber, Month, STAR_NAMES
+├── personal/         # Uses shared types
+└── direction/        # Uses shared types
+```
+
+**Rationale**:
+
+- Explicit dependency on shared concepts
+- Avoids circular dependencies between personal and direction domains
+- Clear "Shared Kernel" pattern from Domain-Driven Design
+
+---
+
+### 4. DTOs in Application Layer (Adopted)
+
+**Decision**: API output types (DirectionResult, YearDirectionResult) are placed in `application/dtos/`, not in domain.
+
+**Rationale**:
+
+- Domain layer focuses on business logic, not API format
+- DTOs can change independently of domain models
+- Clear separation: domain types for computation, DTOs for API output
+
+---
+
+### 5. Dependency Injection Container (NOT Adopted)
 
 **Decision**: Do not use a DI container (tsyringe, inversify, etc.).
 
@@ -68,17 +129,11 @@ class CalculateKigakuUseCase {
 }
 ```
 
-**When DI becomes necessary**:
-
-- Adding `KigakuRepository` to persist calculation results to a database
-- Calling an external calendar API to get seasonal transition dates
-- When these dependencies need to be mocked during testing
-
 **When to reconsider**: When I/O-bound dependencies are added and mocking becomes necessary for testing.
 
 ---
 
-### 3. Result Type / Either Pattern (NOT Adopted)
+### 6. Result Type / Either Pattern (NOT Adopted)
 
 **Decision**: Use traditional `throw` for error handling instead of Result/Either types.
 
@@ -89,21 +144,11 @@ class CalculateKigakuUseCase {
 - TypeScript's type system doesn't enforce Result handling anyway
 - Adds cognitive overhead without proportional benefit
 
-```typescript
-// Current: Clear and idiomatic
-if (birthYear < 1900) {
-  throw new Error("生年は1900年以降の整数を指定してください");
-}
-
-// Overkill for this app
-function calculateHonmeiSei(year: number): Result<StarNumber, ValidationError>;
-```
-
 **When to reconsider**: If error handling becomes complex with multiple error types or if errors are expected outcomes (not exceptions).
 
 ---
 
-### 4. Input Validation with Zod (NOT Adopted)
+### 7. Input Validation with Zod (NOT Adopted)
 
 **Decision**: Use manual validation in API routes instead of schema validation libraries.
 
@@ -118,29 +163,7 @@ function calculateHonmeiSei(year: number): Result<StarNumber, ValidationError>;
 
 ---
 
-### 5. Barrel Files / Index Exports (NOT Adopted)
-
-**Decision**: Import directly from source files instead of re-exporting through index.ts.
-
-```typescript
-// Adopted: Direct imports
-import { calculateHonmeiSei } from "@/modules/domain/kigaku/calculator";
-import type { Month } from "@/modules/domain/kigaku/types";
-
-// Not adopted: Barrel files
-import { calculateHonmeiSei, Month } from "@/modules/domain/kigaku";
-```
-
-**Rationale**:
-
-- Explicit dependencies are clearer
-- Better tree-shaking
-- Avoids circular dependency issues
-- IDE navigation goes directly to source
-
----
-
-### 6. Separation of Calculator and StarName (Adopted)
+### 8. Separation of Calculator and StarName (Adopted)
 
 **Decision**: Separate pure calculation logic (`calculator.ts`) from name mapping (`starName.ts`).
 
@@ -151,6 +174,26 @@ import { calculateHonmeiSei, Month } from "@/modules/domain/kigaku";
 - `starName.ts`: Localization concern (future: multi-language support)
 - Easier to test independently
 - Clear extension point for i18n
+
+---
+
+### 9. Rule-based Domain Logic (Adopted)
+
+**Decision**: Direction fortune logic is split into small, pure function "rules" in `domain/direction/rules/`.
+
+```
+rules/
+├── killingRule.ts    # 本命殺・月命殺・的殺
+├── badRule.ts        # 五黄殺・暗剣殺
+└── goodRule.ts       # 相性による吉方位
+```
+
+**Rationale**:
+
+- Each rule has a single responsibility
+- Easy to test each rule in isolation
+- Rules are aggregated by `statusDecider.ts`
+- New rules can be added without modifying existing code
 
 ---
 
@@ -174,6 +217,7 @@ If the application grows, these are the recommended next steps:
 - Fast development iteration
 - Easy onboarding for contributors
 - No unnecessary abstractions
+- Clear layer boundaries
 
 ### Negative
 

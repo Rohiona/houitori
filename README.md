@@ -26,6 +26,7 @@ The nine stars are:
 - **Language**: TypeScript (strict mode)
 - **Styling**: Tailwind CSS v4
 - **Testing**: Vitest
+- **Formatter**: Prettier
 - **CI/CD**: GitHub Actions
 - **Deployment**: Vercel
 
@@ -41,6 +42,7 @@ The nine stars are:
 make dev      # Start development server
 make test     # Run tests
 make lint     # Run linter
+make format   # Format code with Prettier
 make build    # Production build
 ```
 
@@ -83,23 +85,48 @@ Clean Architecture with three layers:
 
 ```
 src/
-├── app/                                  # Presentation Layer (Next.js)
-│   ├── api/personal/route.ts             # REST API (GET/POST)
-│   └── page.tsx                          # Main page
+├── app/                                    # Presentation Layer (Next.js)
+│   ├── api/personal/route.ts               # REST API (GET/POST)
+│   └── page.tsx                            # Main page
 │
 └── modules/
     ├── domain/
-    │   └── personal/                     # Personal star (本命星・月命星)
+    │   ├── shared/                         # Shared Kernel (StarNumber, Month)
+    │   │   ├── types/index.ts
+    │   │   └── index.ts                    # Public API
+    │   │
+    │   ├── personal/                       # Personal star (本命星・月命星)
+    │   │   ├── services/
+    │   │   │   ├── calculator.ts
+    │   │   │   └── starName.ts
+    │   │   ├── types/index.ts
+    │   │   └── index.ts                    # Public API
+    │   │
+    │   └── direction/                      # Direction fortune (方位の吉凶)
+    │       ├── rules/                      # Domain rules (pure functions)
     │       ├── services/
-    │       │   ├── calculator.ts         # calculateHonmeiSei, calculateGetsumeiSei
-    │       │   └── starName.ts           # getStarName
-    │       └── types/
-    │           └── index.ts              # StarNumber, Month, KigakuResult
+    │       ├── types/index.ts
+    │       └── index.ts                    # Public API
     │
-    ├── application/usecases/             # Application Layer
-    │   └── PersonalStarCalculationUseCase.ts  # Orchestration
+    ├── application/
+    │   ├── dtos/direction/                 # DTOs (API output format)
+    │   ├── services/direction/             # Application services
+    │   └── usecases/                       # Use cases
     │
-    └── infrastructure/                   # Infrastructure Layer (future use)
+    └── infrastructure/                     # Infrastructure Layer (future use)
+```
+
+### Import Convention
+
+Application layer imports from Domain public API (`index.ts`):
+
+```typescript
+// Good: Import from public API
+import { calculateHonmeiSei, type Month } from "@/modules/domain/personal";
+import { decideDirectionStatus, type BoardData } from "@/modules/domain/direction";
+
+// Avoid: Deep imports (except for tests)
+import { calculateHonmeiSei } from "@/modules/domain/personal/services/calculator";
 ```
 
 ## License

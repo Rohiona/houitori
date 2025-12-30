@@ -26,6 +26,7 @@
 - **言語**: TypeScript (strict mode)
 - **スタイリング**: Tailwind CSS v4
 - **テスト**: Vitest
+- **フォーマッタ**: Prettier
 - **CI/CD**: GitHub Actions
 - **デプロイ**: Vercel
 
@@ -41,6 +42,7 @@
 make dev      # 開発サーバーを起動
 make test     # テストを実行
 make lint     # Lintを実行
+make format   # Prettierでコードを整形
 make build    # 本番ビルド
 ```
 
@@ -83,23 +85,48 @@ curl -X POST http://localhost:3000/api/personal \
 
 ```
 src/
-├── app/                                  # プレゼンテーション層 (Next.js)
-│   ├── api/personal/route.ts             # REST API (GET/POST)
-│   └── page.tsx                          # メインページ
+├── app/                                    # プレゼンテーション層 (Next.js)
+│   ├── api/personal/route.ts               # REST API (GET/POST)
+│   └── page.tsx                            # メインページ
 │
 └── modules/
     ├── domain/
-    │   └── personal/                     # 個人の星 (本命星・月命星)
+    │   ├── shared/                         # 共有カーネル (StarNumber, Month)
+    │   │   ├── types/index.ts
+    │   │   └── index.ts                    # 公開API
+    │   │
+    │   ├── personal/                       # 個人の星 (本命星・月命星)
+    │   │   ├── services/
+    │   │   │   ├── calculator.ts
+    │   │   │   └── starName.ts
+    │   │   ├── types/index.ts
+    │   │   └── index.ts                    # 公開API
+    │   │
+    │   └── direction/                      # 方位の吉凶
+    │       ├── rules/                      # ドメインルール（純粋関数）
     │       ├── services/
-    │       │   ├── calculator.ts         # calculateHonmeiSei, calculateGetsumeiSei
-    │       │   └── starName.ts           # getStarName
-    │       └── types/
-    │           └── index.ts              # StarNumber, Month, KigakuResult
+    │       ├── types/index.ts
+    │       └── index.ts                    # 公開API
     │
-    ├── application/usecases/             # アプリケーション層
-    │   └── PersonalStarCalculationUseCase.ts  # オーケストレーション
+    ├── application/
+    │   ├── dtos/direction/                 # DTO（API出力形式）
+    │   ├── services/direction/             # アプリケーションサービス
+    │   └── usecases/                       # ユースケース
     │
-    └── infrastructure/                   # インフラ層 (将来用)
+    └── infrastructure/                     # インフラ層 (将来用)
+```
+
+### インポート規約
+
+Application層はDomainの公開API（`index.ts`）経由でインポート:
+
+```typescript
+// Good: 公開API経由でインポート
+import { calculateHonmeiSei, type Month } from "@/modules/domain/personal";
+import { decideDirectionStatus, type BoardData } from "@/modules/domain/direction";
+
+// Avoid: 深いパスでのインポート（テスト以外）
+import { calculateHonmeiSei } from "@/modules/domain/personal/services/calculator";
 ```
 
 ## ライセンス

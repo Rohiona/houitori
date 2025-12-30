@@ -1,11 +1,11 @@
-import { decideDirectionStatus } from "@/modules/domain/direction/services/statusDecider";
-import type {
-  StarNumber,
-  DirectionResult,
-  BoardDirections,
-  CompatibilityTable,
-} from "@/modules/domain/direction/types";
-import { DIRECTION_NUMBERS } from "@/modules/domain/direction/types";
+import {
+  decideDirectionStatus,
+  DIRECTION_NUMBERS,
+  type StarNumber,
+  type BoardDirections,
+  type CompatibilityTable,
+} from "@/modules/domain/direction";
+import type { DirectionResult } from "@/modules/application/dtos/direction";
 
 /**
  * 盤1枚から方位判定結果を組み立てる
