@@ -1,7 +1,5 @@
-import {
-  calculateDirectionStatus,
-  DIRECTION_NUMBERS,
-} from "@/modules/domain/direction/services/judgment";
+import { DIRECTION_NUMBERS } from "@/modules/domain/direction/services/judgment";
+import { DirectionStatusService } from "@/modules/application/services/direction/DirectionStatusService";
 import type {
   StarNumber,
   DirectionResult,
@@ -15,13 +13,17 @@ import type {
 /**
  * 方位の吉凶計算ユースケース
  *
- * ドメインサービスを組み合わせて結果を組み立てる。
+ * アプリケーションサービスを組み合わせて結果を組み立てる。
  * Application層の責務:
- * - 複数ドメインサービスの調整（オーケストレーション）
- * - 盤データと相性テーブルの統合
+ * - 複数サービスの調整（オーケストレーション）
+ * - 盤データの統合と結果の組み立て
  */
 export class DirectionCalculationUseCase {
-  constructor(private readonly compatibility: CompatibilityTable) {}
+  private readonly statusService: DirectionStatusService;
+
+  constructor(compatibility: CompatibilityTable) {
+    this.statusService = new DirectionStatusService(compatibility);
+  }
 
   /**
    * 1つの盤に対する全方位の吉凶を計算
@@ -35,16 +37,8 @@ export class DirectionCalculationUseCase {
     honmeiSei: StarNumber,
     getsumeiSei: StarNumber
   ): DirectionResult[] {
-    const honmeiStatus = calculateDirectionStatus(
-      board,
-      honmeiSei,
-      this.compatibility
-    );
-    const getsumeiStatus = calculateDirectionStatus(
-      board,
-      getsumeiSei,
-      this.compatibility
-    );
+    const honmeiStatus = this.statusService.calculate(board, honmeiSei);
+    const getsumeiStatus = this.statusService.calculate(board, getsumeiSei);
 
     const results: DirectionResult[] = [];
 
