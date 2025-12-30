@@ -23,6 +23,11 @@ export const DIRECTION_NAMES = {
 export type DirectionName = (typeof DIRECTION_NAMES)[DirectionNumber];
 
 /**
+ * 方角番号のリスト
+ */
+export const DIRECTION_NUMBERS: DirectionNumber[] = [1, 2, 3, 4, 5, 6, 7, 8];
+
+/**
  * 対面方角のマッピング
  * 南⟷北, 南西⟷北東, 西⟷東, 北西⟷東南
  */
