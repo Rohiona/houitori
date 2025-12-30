@@ -27,6 +27,12 @@
 .pnpm-store/
 .serena/
 
+# board data (copyright concerns)
+/src/data/boards/
+
+# Claude Code instructions (local only)
+CLAUDE.md
+
 # debug
 npm-debug.log*
 yarn-debug.log*
