@@ -1,11 +1,13 @@
 # ADR-001: Architecture Decisions for Houitori
 
 ## Status
+
 Accepted
 
 ## Context
 
 Houitori is a Nine Star Ki (九星気学) calculator web application. The core functionality is:
+
 - Input: Birth year and month
 - Output: Honmei-sei (本命星) and Getsumei-sei (月命星) with their Japanese names
 - No database, no external API calls, no user authentication
@@ -29,6 +31,7 @@ src/
 ```
 
 **Rationale**:
+
 - Clear separation of concerns
 - Domain logic is testable in isolation
 - Easy to understand for new contributors
@@ -56,16 +59,17 @@ The primary purpose of DI containers is **improving testability** by allowing de
 // Current: Simple, sufficient, AND testable
 const useCase = new CalculateKigakuUseCase();
 const result = useCase.execute(1985, 6);
-expect(result.honmeiSei).toBe(6);  // Direct test without mocks
+expect(result.honmeiSei).toBe(6); // Direct test without mocks
 
 // Overkill for this app (no dependencies to mock)
 @injectable()
 class CalculateKigakuUseCase {
-  constructor(@inject('KigakuRepository') private repo: IKigakuRepository) {}
+  constructor(@inject("KigakuRepository") private repo: IKigakuRepository) {}
 }
 ```
 
 **When DI becomes necessary**:
+
 - Adding `KigakuRepository` to persist calculation results to a database
 - Calling an external calendar API to get seasonal transition dates
 - When these dependencies need to be mocked during testing
@@ -79,6 +83,7 @@ class CalculateKigakuUseCase {
 **Decision**: Use traditional `throw` for error handling instead of Result/Either types.
 
 **Rationale**:
+
 - Only one error case: invalid birth year (< 1900)
 - Error is truly exceptional, not a normal flow
 - TypeScript's type system doesn't enforce Result handling anyway
@@ -91,7 +96,7 @@ if (birthYear < 1900) {
 }
 
 // Overkill for this app
-function calculateHonmeiSei(year: number): Result<StarNumber, ValidationError>
+function calculateHonmeiSei(year: number): Result<StarNumber, ValidationError>;
 ```
 
 **When to reconsider**: If error handling becomes complex with multiple error types or if errors are expected outcomes (not exceptions).
@@ -103,6 +108,7 @@ function calculateHonmeiSei(year: number): Result<StarNumber, ValidationError>
 **Decision**: Use manual validation in API routes instead of schema validation libraries.
 
 **Rationale**:
+
 - Only 2 fields to validate (birthYear, birthMonth)
 - Validation rules are simple (integer ranges)
 - Adding zod increases bundle size
@@ -126,6 +132,7 @@ import { calculateHonmeiSei, Month } from "@/modules/domain/kigaku";
 ```
 
 **Rationale**:
+
 - Explicit dependencies are clearer
 - Better tree-shaking
 - Avoids circular dependency issues
@@ -138,6 +145,7 @@ import { calculateHonmeiSei, Month } from "@/modules/domain/kigaku";
 **Decision**: Separate pure calculation logic (`calculator.ts`) from name mapping (`starName.ts`).
 
 **Rationale**:
+
 - Single Responsibility Principle
 - `calculator.ts`: Mathematical calculations
 - `starName.ts`: Localization concern (future: multi-language support)
@@ -150,23 +158,25 @@ import { calculateHonmeiSei, Month } from "@/modules/domain/kigaku";
 
 If the application grows, these are the recommended next steps:
 
-| Feature | Recommended Change |
-|---------|-------------------|
-| Database storage | Add Repository interface in `application/ports/`, implement in `infrastructure/` |
-| External calendar API | Add CalendarClient interface, implement HttpCalendarClient |
-| Multi-language | Extend `getStarName()` with locale parameter |
-| Complex validation | Introduce zod schemas |
-| Multiple use cases with shared deps | Consider lightweight DI |
+| Feature                             | Recommended Change                                                               |
+| ----------------------------------- | -------------------------------------------------------------------------------- |
+| Database storage                    | Add Repository interface in `application/ports/`, implement in `infrastructure/` |
+| External calendar API               | Add CalendarClient interface, implement HttpCalendarClient                       |
+| Multi-language                      | Extend `getStarName()` with locale parameter                                     |
+| Complex validation                  | Introduce zod schemas                                                            |
+| Multiple use cases with shared deps | Consider lightweight DI                                                          |
 
 ## Consequences
 
 ### Positive
+
 - Simple, maintainable codebase
 - Fast development iteration
 - Easy onboarding for contributors
 - No unnecessary abstractions
 
 ### Negative
+
 - Less "impressive" at first glance (no fancy patterns)
 - Requires discipline to add complexity only when needed
 

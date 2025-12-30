@@ -1,8 +1,4 @@
-import type {
-  BoardDirections,
-  BoardData,
-  CompatibilityTable,
-} from "../types";
+import type { BoardDirections, BoardData, CompatibilityTable } from "../types";
 
 /**
  * テスト用の相性テーブル（五行シート）
@@ -23,11 +19,11 @@ export const testCompatibility: CompatibilityTable = {
  * テスト用の盤データ（2026年盤の一部）
  */
 export const testBoard: BoardDirections = {
-  "1": { star: 5, bad: true },  // 南: 五黄殺
+  "1": { star: 5, bad: true }, // 南: 五黄殺
   "2": { star: 7, bad: false }, // 南西
   "3": { star: 3, bad: false }, // 西
   "4": { star: 2, bad: false }, // 北西
-  "5": { star: 6, bad: true },  // 北: 暗剣殺
+  "5": { star: 6, bad: true }, // 北: 暗剣殺
   "6": { star: 4, bad: false }, // 北東
   "7": { star: 8, bad: false }, // 東
   "8": { star: 9, bad: false }, // 東南

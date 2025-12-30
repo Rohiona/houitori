@@ -25,9 +25,7 @@ describe("DirectionYearCalculationUseCase", () => {
     const result = useCase.execute(testBoardData, 1, 1);
 
     // 2月の南西(2)は五黄殺
-    const febSouthwest = result.months["2"].directions.find(
-      (r) => r.direction === 2
-    );
+    const febSouthwest = result.months["2"].directions.find((r) => r.direction === 2);
     expect(febSouthwest?.honmeiResult.status).toBe("bad"); // 凶
   });
 });

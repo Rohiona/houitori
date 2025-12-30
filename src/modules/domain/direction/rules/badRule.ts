@@ -8,9 +8,7 @@ import type { DirectionNumber, BoardDirections } from "../types";
  * @param board 盤データ
  * @returns 凶となる方角番号のSet
  */
-export function badRule(
-  board: BoardDirections
-): Set<DirectionNumber> {
+export function badRule(board: BoardDirections): Set<DirectionNumber> {
   const result = new Set<DirectionNumber>();
 
   for (const dirStr of Object.keys(board)) {

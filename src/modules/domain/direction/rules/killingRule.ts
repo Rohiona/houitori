@@ -11,10 +11,7 @@ import { OPPOSITE_DIRECTIONS } from "../types";
  * @param star 本命星または月命星
  * @returns 殺となる方角番号のSet
  */
-export function killingRule(
-  board: BoardDirections,
-  star: StarNumber
-): Set<DirectionNumber> {
+export function killingRule(board: BoardDirections, star: StarNumber): Set<DirectionNumber> {
   const result = new Set<DirectionNumber>();
 
   for (const dirStr of Object.keys(board)) {

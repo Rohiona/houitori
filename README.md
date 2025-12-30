@@ -9,6 +9,7 @@ A web application that calculates your Nine Star Ki (Kigaku) fortune based on yo
 Nine Star Ki is a traditional East Asian astrology system that assigns one of nine "stars" to individuals based on their birth date. Each star corresponds to specific personality traits and fortune predictions.
 
 The nine stars are:
+
 - 1: Ippaku Suisei (One White Water Star)
 - 2: Nikoku Dosei (Two Black Earth Star)
 - 3: Sanpeki Mokusei (Three Jade Wood Star)

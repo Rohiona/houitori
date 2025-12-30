@@ -1,4 +1,4 @@
-.PHONY: dev test lint build clean
+.PHONY: dev test lint format format-check build clean
 
 dev:
 	docker compose up
@@ -8,6 +8,12 @@ test:
 
 lint:
 	docker compose run --rm web pnpm lint
+
+format:
+	docker compose run --rm web pnpm format
+
+format-check:
+	docker compose run --rm web pnpm format:check
 
 build:
 	docker compose run --rm web pnpm build

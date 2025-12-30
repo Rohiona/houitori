@@ -25,10 +25,7 @@ export function calculateHonmeiSei(birthYear: number): StarNumber {
  * @param birthMonth 生月（1-12）
  * @returns 月命星の番号（1-9）
  */
-export function calculateGetsumeiSei(
-  honmeiSei: StarNumber,
-  birthMonth: Month
-): StarNumber {
+export function calculateGetsumeiSei(honmeiSei: StarNumber, birthMonth: Month): StarNumber {
   // 本命星グループごとの月命星テーブル
   // インデックス: [0]=1月, [1]=2月, ... [11]=12月
   const tables: Record<string, readonly StarNumber[]> = {
@@ -53,4 +50,3 @@ export function calculateGetsumeiSei(
 
   return table[birthMonth - 1];
 }
-

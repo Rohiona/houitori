@@ -5,11 +5,11 @@ import type { BoardDirections } from "../types";
 const testBoard: BoardDirections = {
   "1": { star: 5, bad: false },
   "2": { star: 7, bad: false },
-  "3": { star: 3, bad: false },  // 西に3
+  "3": { star: 3, bad: false }, // 西に3
   "4": { star: 2, bad: false },
   "5": { star: 6, bad: false },
   "6": { star: 4, bad: false },
-  "7": { star: 8, bad: false },  // 東（西の対面）
+  "7": { star: 8, bad: false }, // 東（西の対面）
   "8": { star: 9, bad: false },
 };
 
@@ -34,13 +34,13 @@ describe("killingRule", () => {
 
   it("複数箇所に自分の星がいる場合はすべて返す", () => {
     const boardWithDuplicates: BoardDirections = {
-      "1": { star: 3, bad: false },  // 南に3
+      "1": { star: 3, bad: false }, // 南に3
       "2": { star: 7, bad: false },
-      "3": { star: 3, bad: false },  // 西にも3
+      "3": { star: 3, bad: false }, // 西にも3
       "4": { star: 2, bad: false },
-      "5": { star: 6, bad: false },  // 北（南の対面）
+      "5": { star: 6, bad: false }, // 北（南の対面）
       "6": { star: 4, bad: false },
-      "7": { star: 8, bad: false },  // 東（西の対面）
+      "7": { star: 8, bad: false }, // 東（西の対面）
       "8": { star: 9, bad: false },
     };
 

@@ -16,17 +16,11 @@ export async function POST(request: NextRequest) {
 
     // Validation
     if (!birthYear || !birthMonth) {
-      return Response.json(
-        { error: "birthYear and birthMonth are required" },
-        { status: 400 }
-      );
+      return Response.json({ error: "birthYear and birthMonth are required" }, { status: 400 });
     }
 
     if (!Number.isInteger(birthYear) || birthYear < 1900) {
-      return Response.json(
-        { error: "birthYear must be an integer >= 1900" },
-        { status: 400 }
-      );
+      return Response.json({ error: "birthYear must be an integer >= 1900" }, { status: 400 });
     }
 
     if (!Number.isInteger(birthMonth) || birthMonth < 1 || birthMonth > 12) {
@@ -41,10 +35,7 @@ export async function POST(request: NextRequest) {
     return Response.json(result);
   } catch (error) {
     console.error("Personal star calculation error:", error);
-    return Response.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
+    return Response.json({ error: "Internal server error" }, { status: 500 });
   }
 }
 
@@ -64,10 +55,7 @@ export async function GET(request: NextRequest) {
   const month = parseInt(birthMonth, 10);
 
   if (isNaN(year) || year < 1900) {
-    return Response.json(
-      { error: "birthYear must be an integer >= 1900" },
-      { status: 400 }
-    );
+    return Response.json({ error: "birthYear must be an integer >= 1900" }, { status: 400 });
   }
 
   if (isNaN(month) || month < 1 || month > 12) {

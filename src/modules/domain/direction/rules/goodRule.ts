@@ -1,9 +1,4 @@
-import type {
-  StarNumber,
-  DirectionNumber,
-  BoardDirections,
-  CompatibilityTable,
-} from "../types";
+import type { StarNumber, DirectionNumber, BoardDirections, CompatibilityTable } from "../types";
 
 /**
  * 吉方位の判定

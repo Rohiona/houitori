@@ -1,8 +1,5 @@
 import { describe, it, expect } from "vitest";
-import {
-  calculateHonmeiSei,
-  calculateGetsumeiSei,
-} from "./calculator";
+import { calculateHonmeiSei, calculateGetsumeiSei } from "./calculator";
 
 describe("calculateHonmeiSei", () => {
   it("should calculate correct honmei sei for various years", () => {
@@ -66,5 +63,3 @@ describe("calculateGetsumeiSei", () => {
     expect(calculateGetsumeiSei(8, 12)).toBe(1);
   });
 });
-
-
