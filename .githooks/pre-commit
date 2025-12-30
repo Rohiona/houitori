@@ -1,5 +1,16 @@
 #!/bin/sh
 
-# Run prettier check inside Docker container
-# If formatting issues are found, commit will be rejected
-docker compose run --rm web sh -c "pnpm install --frozen-lockfile && pnpm format:check"
+# Run prettier --write inside Docker container
+docker compose run --rm web sh -c "pnpm install --frozen-lockfile && pnpm format"
+
+# Check if any files were modified by prettier
+if ! git diff --quiet; then
+  echo ""
+  echo "Prettier made changes to the following files:"
+  git diff --name-only
+  echo ""
+  echo "Re-staging modified files..."
+  git diff --name-only | xargs git add
+  echo "Please commit again."
+  exit 1
+fi
