@@ -4,7 +4,7 @@ setup:
 	git config core.hooksPath .githooks
 
 dev:
-	docker compose up
+	docker compose up -d
 
 test:
 	docker compose exec web pnpm test:run
