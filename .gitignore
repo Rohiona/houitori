@@ -28,7 +28,7 @@
 .serena/
 
 # board data (copyright concerns)
-/src/data/boards/
+/src/data/
 
 # Claude Code instructions (local only)
 CLAUDE.md
