@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { PersonalStarCalculationUseCase } from "@/modules/application/usecases/PersonalStarCalculationUseCase";
-import { personalStarRequestSchema } from "@/modules/application/validators";
+import { personalStarRequestSchema } from "@/modules/presentation/validators/personal";
 import type { Month } from "@/modules/domain/personal/types";
 
 const personalStarCalculationUseCase = new PersonalStarCalculationUseCase();
