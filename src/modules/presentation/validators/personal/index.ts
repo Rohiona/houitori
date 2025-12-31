@@ -10,5 +10,3 @@ export const personalStarRequestSchema = z.object({
     .min(1, "birthMonth must be an integer between 1 and 12")
     .max(12, "birthMonth must be an integer between 1 and 12"),
 });
-
-export type PersonalStarRequest = z.infer<typeof personalStarRequestSchema>;
