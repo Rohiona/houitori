@@ -9,7 +9,7 @@ export { decideDirectionStatus } from "./services/statusDecider";
 // Domain types
 export type {
   DirectionNumber,
-  DirectionName,
+  DirectionKey,
   DirectionStatus,
   DirectionCell,
   BoardDirections,
@@ -17,7 +17,7 @@ export type {
   CompatibilityTable,
 } from "./types";
 
-export { DIRECTION_NUMBERS, DIRECTION_NAMES, OPPOSITE_DIRECTIONS } from "./types";
+export { DIRECTION_NUMBERS, DIRECTION_KEYS, DIRECTION_NAMES, OPPOSITE_DIRECTIONS } from "./types";
 
 // Re-export shared types
 export type { StarNumber, Month } from "./types";

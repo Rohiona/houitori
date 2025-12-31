@@ -83,8 +83,8 @@ describe("decideDirectionStatus", () => {
     };
 
     const result = decideDirectionStatus(board, 1, compatibility);
-    expect(result[1]).toBe("none"); // 南(1)に5
-    expect(result[2]).toBe("none"); // 南西(2)に2
+    expect(result[1]).toBe("neutral"); // 南(1)に5
+    expect(result[2]).toBe("neutral"); // 南西(2)に2
   });
 
   it("全8方位の結果が返される", () => {

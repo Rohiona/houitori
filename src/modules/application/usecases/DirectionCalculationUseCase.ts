@@ -3,12 +3,12 @@ import type { StarNumber, BoardData, CompatibilityTable } from "@/modules/domain
 import type { MonthDirections, YearDirectionResult } from "@/modules/application/dtos/direction";
 
 /**
- * 年間の方位吉凶計算ユースケース
+ * 方位吉凶計算ユースケース
  *
  * 年盤・月盤を反復処理し、結果を集約する。
  * 盤1枚の計算は BoardDirectionResultBuilder に委譲。
  */
-export class DirectionYearCalculationUseCase {
+export class DirectionCalculationUseCase {
   constructor(private readonly compatibility: CompatibilityTable) {}
 
   /**

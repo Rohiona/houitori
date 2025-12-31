@@ -14,20 +14,47 @@ import type { StarNumber } from "../../shared/types";
 export type DirectionNumber = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
 
 /**
- * 方角の名称
+ * 方角の名称（多言語対応）
+ * フォールバック: en
  */
 export const DIRECTION_NAMES = {
-  1: "南",
-  2: "南西",
-  3: "西",
-  4: "北西",
-  5: "北",
-  6: "北東",
-  7: "東",
-  8: "東南",
+  en: {
+    1: "South",
+    2: "Southwest",
+    3: "West",
+    4: "Northwest",
+    5: "North",
+    6: "Northeast",
+    7: "East",
+    8: "Southeast",
+  },
+  ja: {
+    1: "南",
+    2: "南西",
+    3: "西",
+    4: "北西",
+    5: "北",
+    6: "北東",
+    7: "東",
+    8: "東南",
+  },
 } as const;
 
-export type DirectionName = (typeof DIRECTION_NAMES)[DirectionNumber];
+/**
+ * 方角のAPIキー（英語小文字）
+ */
+export const DIRECTION_KEYS = {
+  1: "south",
+  2: "southwest",
+  3: "west",
+  4: "northwest",
+  5: "north",
+  6: "northeast",
+  7: "east",
+  8: "southeast",
+} as const;
+
+export type DirectionKey = (typeof DIRECTION_KEYS)[DirectionNumber];
 
 /**
  * 方角番号のリスト
@@ -52,7 +79,7 @@ export const OPPOSITE_DIRECTIONS: Record<DirectionNumber, DirectionNumber> = {
 /**
  * 吉凶ステータス
  */
-export type DirectionStatus = "none" | "good" | "bad";
+export type DirectionStatus = "neutral" | "good" | "bad";
 
 /**
  * 盤の1セル（方角ごとのデータ）

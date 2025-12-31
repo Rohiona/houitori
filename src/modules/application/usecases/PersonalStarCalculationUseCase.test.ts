@@ -10,8 +10,6 @@ describe("PersonalStarCalculationUseCase", () => {
     expect(result).toEqual({
       honmeiSei: 6,
       getsumeiSei: 1,
-      honmeiName: "六白金星",
-      getsumeiName: "一白水星",
     });
   });
 

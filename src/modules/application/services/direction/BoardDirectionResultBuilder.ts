@@ -1,6 +1,7 @@
 import {
   decideDirectionStatus,
   DIRECTION_NUMBERS,
+  DIRECTION_KEYS,
   type StarNumber,
   type BoardDirections,
   type CompatibilityTable,
@@ -33,7 +34,7 @@ export function buildBoardDirectionResult(
   for (const direction of DIRECTION_NUMBERS) {
     const cell = board[String(direction)];
     results.push({
-      direction,
+      direction: DIRECTION_KEYS[direction],
       star: cell.star,
       honmeiResult: { status: honmeiStatus[direction] },
       getsumeiResult: { status: getsumeiStatus[direction] },

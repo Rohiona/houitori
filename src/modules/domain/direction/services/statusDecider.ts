@@ -39,7 +39,7 @@ export function decideDirectionStatus(
     } else if (good.has(direction)) {
       result[direction] = "good";
     } else {
-      result[direction] = "none";
+      result[direction] = "neutral";
     }
   }
 

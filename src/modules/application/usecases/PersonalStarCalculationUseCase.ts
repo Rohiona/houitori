@@ -1,7 +1,6 @@
 import {
   calculateHonmeiSei,
   calculateGetsumeiSei,
-  getStarName,
   type Month,
   type KigakuResult,
 } from "@/modules/domain/personal";
@@ -14,6 +13,8 @@ import {
  * - 複数ドメインサービスの調整（オーケストレーション）
  * - トランザクション管理
  * - 外部サービス連携
+ *
+ * 注: 星の名前はフロントでi18n処理するため、数値のみ返す
  */
 export class PersonalStarCalculationUseCase {
   execute(birthYear: number, birthMonth: Month): KigakuResult {
@@ -23,8 +24,6 @@ export class PersonalStarCalculationUseCase {
     return {
       honmeiSei,
       getsumeiSei,
-      honmeiName: getStarName(honmeiSei),
-      getsumeiName: getStarName(getsumeiSei),
     };
   }
 }
