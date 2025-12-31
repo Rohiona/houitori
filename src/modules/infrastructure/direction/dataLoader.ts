@@ -1,5 +1,6 @@
+import fs from "fs";
+import path from "path";
 import type { BoardData, CompatibilityTable } from "@/modules/domain/direction";
-import compatibilityData from "@/data/compatibility.json";
 
 /**
  * 盤データを読み込む
@@ -8,10 +9,11 @@ import compatibilityData from "@/data/compatibility.json";
  * @returns 盤データ
  * @throws 該当年のデータがない場合はエラー
  */
-export async function loadBoardData(year: number): Promise<BoardData> {
+export function loadBoardData(year: number): BoardData {
+  const filePath = path.join(process.cwd(), "src/data/boards", `${year}.json`);
   try {
-    const data = await import(`@/data/boards/${year}.json`);
-    return data.default as BoardData;
+    const content = fs.readFileSync(filePath, "utf-8");
+    return JSON.parse(content) as BoardData;
   } catch {
     throw new Error(`Board data not found for year ${year}`);
   }
@@ -21,5 +23,7 @@ export async function loadBoardData(year: number): Promise<BoardData> {
  * 相性テーブルを取得
  */
 export function getCompatibilityTable(): CompatibilityTable {
-  return compatibilityData as CompatibilityTable;
+  const filePath = path.join(process.cwd(), "src/data/compatibility.json");
+  const content = fs.readFileSync(filePath, "utf-8");
+  return JSON.parse(content) as CompatibilityTable;
 }

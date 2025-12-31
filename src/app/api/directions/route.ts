@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
     // 盤データと相性テーブルを読み込み
     let boardData;
     try {
-      boardData = await loadBoardData(targetYear);
+      boardData = loadBoardData(targetYear);
     } catch {
       return Response.json(
         { error: `Board data not available for year ${targetYear}` },
