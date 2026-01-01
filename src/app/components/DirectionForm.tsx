@@ -51,10 +51,25 @@ export function DirectionForm() {
     },
   });
 
-  const { fields, append, remove } = useFieldArray({
+  const {
+    fields,
+    append,
+    remove: removeField,
+  } = useFieldArray({
     control: form.control,
     name: "persons",
   });
+
+  // 削除時に結果も同期する
+  const handleRemove = (index: number) => {
+    removeField(index);
+    setResult((prev) => {
+      if (!prev) return null;
+      const newPersons = [...prev.persons];
+      newPersons.splice(index, 1);
+      return { ...prev, persons: newPersons };
+    });
+  };
 
   const targetYear = form.watch("targetYear");
   const persons = form.watch("persons");
@@ -152,7 +167,12 @@ export function DirectionForm() {
                   )}
                 </span>
                 {index > 0 && (
-                  <Button type="button" variant="ghost" size="sm" onClick={() => remove(index)}>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleRemove(index)}
+                  >
                     削除
                   </Button>
                 )}
