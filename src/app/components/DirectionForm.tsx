@@ -75,13 +75,13 @@ export function DirectionForm() {
       });
       if (response.success) {
         setResult((prev) => {
-          if (!prev) {
-            return response.data;
-          }
-          // 既存の結果に追加/更新
-          const newPersons = [...prev.persons];
+          // 既存の結果または空配列から開始し、正しいインデックスに結果を配置
+          const newPersons = prev?.persons ? [...prev.persons] : [];
           newPersons[index] = response.data.persons[0];
-          return { ...prev, persons: newPersons };
+          return {
+            year: response.data.year,
+            persons: newPersons,
+          };
         });
       } else {
         setError(response.error);
