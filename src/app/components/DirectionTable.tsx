@@ -1,0 +1,154 @@
+"use client";
+
+import type { PersonDirectionResult, DirectionResult } from "@/modules/application/dtos/direction";
+import type { DirectionStatus, DirectionKey } from "@/modules/domain/direction";
+import { DIRECTION_NAMES } from "@/modules/domain/direction";
+
+interface DirectionTableProps {
+  person: PersonDirectionResult;
+  year: number;
+}
+
+// 方角キーから日本語名を取得
+const directionKeyToJa: Record<DirectionKey, string> = {
+  south: DIRECTION_NAMES.ja[1],
+  southwest: DIRECTION_NAMES.ja[2],
+  west: DIRECTION_NAMES.ja[3],
+  northwest: DIRECTION_NAMES.ja[4],
+  north: DIRECTION_NAMES.ja[5],
+  northeast: DIRECTION_NAMES.ja[6],
+  east: DIRECTION_NAMES.ja[7],
+  southeast: DIRECTION_NAMES.ja[8],
+};
+
+// 方角の表示順序
+const directionOrder: DirectionKey[] = [
+  "south",
+  "southwest",
+  "west",
+  "northwest",
+  "north",
+  "northeast",
+  "east",
+  "southeast",
+];
+
+// 月の表示順序（2月〜翌1月）
+const monthOrder = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "1"];
+
+// ステータスから表示文字を取得
+function getStatusSymbol(status: DirectionStatus): string {
+  switch (status) {
+    case "good":
+      return "◯";
+    case "bad":
+      return "×";
+    default:
+      return "";
+  }
+}
+
+// ステータスに応じたセルのクラス
+function getStatusClass(status: DirectionStatus): string {
+  if (status === "good") {
+    return "bg-red-100 dark:bg-red-900/30";
+  }
+  return "";
+}
+
+// 方向結果を方向キーでインデックス化
+function indexByDirection(directions: DirectionResult[]): Record<DirectionKey, DirectionResult> {
+  const result: Partial<Record<DirectionKey, DirectionResult>> = {};
+  for (const d of directions) {
+    result[d.direction] = d;
+  }
+  return result as Record<DirectionKey, DirectionResult>;
+}
+
+export function DirectionTable({ person, year }: DirectionTableProps) {
+  const yearDirections = indexByDirection(person.directions);
+
+  return (
+    <div className="overflow-x-auto">
+      <table className="min-w-full border-collapse text-sm">
+        <thead>
+          <tr className="border-b">
+            <th className="px-2 py-1 text-left font-medium" rowSpan={2}>
+              方位
+            </th>
+            <th className="px-2 py-1 text-center font-medium border-l" colSpan={2}>
+              年盤
+            </th>
+            {monthOrder.map((month, idx) => (
+              <th
+                key={month}
+                className={`px-2 py-1 text-center font-medium ${idx === 0 ? "border-l-2 border-l-gray-400" : "border-l"}`}
+                colSpan={2}
+              >
+                {month}月
+              </th>
+            ))}
+          </tr>
+          <tr className="border-b text-xs text-muted-foreground">
+            <th className="px-1 py-1 text-center border-l">本</th>
+            <th className="px-1 py-1 text-center">月</th>
+            {monthOrder.flatMap((month, idx) => [
+              <th
+                key={`${month}-h`}
+                className={`px-1 py-1 text-center ${idx === 0 ? "border-l-2 border-l-gray-400" : "border-l"}`}
+              >
+                本
+              </th>,
+              <th key={`${month}-g`} className="px-1 py-1 text-center">
+                月
+              </th>,
+            ])}
+          </tr>
+        </thead>
+        <tbody>
+          {directionOrder.map((dirKey) => {
+            const yearResult = yearDirections[dirKey];
+            return (
+              <tr key={dirKey} className="border-b">
+                <td className="px-2 py-1 font-medium">{directionKeyToJa[dirKey]}</td>
+                {/* 年盤 */}
+                <td
+                  className={`px-1 py-1 text-center border-l ${getStatusClass(yearResult?.honmeiResult.status)}`}
+                >
+                  {yearResult ? getStatusSymbol(yearResult.honmeiResult.status) : ""}
+                </td>
+                <td
+                  className={`px-1 py-1 text-center ${getStatusClass(yearResult?.getsumeiResult.status)}`}
+                >
+                  {yearResult ? getStatusSymbol(yearResult.getsumeiResult.status) : ""}
+                </td>
+                {/* 月盤 */}
+                {monthOrder.flatMap((month, idx) => {
+                  const monthData = person.months[month];
+                  const monthDirections = monthData
+                    ? indexByDirection(monthData.directions)
+                    : ({} as Record<DirectionKey, DirectionResult>);
+                  const monthResult = monthDirections[dirKey];
+                  return [
+                    <td
+                      key={`${month}-h`}
+                      className={`px-1 py-1 text-center ${idx === 0 ? "border-l-2 border-l-gray-400" : "border-l"} ${getStatusClass(monthResult?.honmeiResult.status)}`}
+                    >
+                      {monthResult ? getStatusSymbol(monthResult.honmeiResult.status) : ""}
+                    </td>,
+                    <td
+                      key={`${month}-g`}
+                      className={`px-1 py-1 text-center ${getStatusClass(monthResult?.getsumeiResult.status)}`}
+                    >
+                      {monthResult ? getStatusSymbol(monthResult.getsumeiResult.status) : ""}
+                    </td>,
+                  ];
+                })}
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  );
+}
