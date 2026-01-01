@@ -73,7 +73,10 @@ export function DirectionTable({ person, year }: DirectionTableProps) {
       <table className="min-w-full border-collapse text-sm">
         <thead>
           <tr className="border-b">
-            <th className="px-2 py-1 text-left font-medium" rowSpan={2}>
+            <th
+              className="px-2 py-1 text-left font-medium sticky left-0 bg-background z-10 shadow-[2px_0_4px_-2px_rgba(0,0,0,0.15)]"
+              rowSpan={2}
+            >
               方位
             </th>
             <th className="px-2 py-1 text-center font-medium border-l" colSpan={2}>
@@ -110,7 +113,9 @@ export function DirectionTable({ person, year }: DirectionTableProps) {
             const yearResult = yearDirections[dirKey];
             return (
               <tr key={dirKey} className="border-b">
-                <td className="px-2 py-1 font-medium">{directionKeyToJa[dirKey]}</td>
+                <td className="px-2 py-1 font-medium sticky left-0 bg-background shadow-[2px_0_4px_-2px_rgba(0,0,0,0.15)]">
+                  {directionKeyToJa[dirKey]}
+                </td>
                 {/* 年盤 */}
                 <td
                   className={`px-1 py-1 text-center border-l ${getStatusClass(yearResult?.honmeiResult.status)}`}
