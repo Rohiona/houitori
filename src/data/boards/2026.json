@@ -1,0 +1,135 @@
+{
+  "year": 2026,
+  "yearBoard": {
+    "1": { "star": 5, "bad": true },
+    "2": { "star": 7, "bad": false },
+    "3": { "star": 3, "bad": false },
+    "4": { "star": 2, "bad": false },
+    "5": { "star": 6, "bad": true },
+    "6": { "star": 4, "bad": false },
+    "7": { "star": 8, "bad": false },
+    "8": { "star": 9, "bad": false }
+  },
+  "monthBoards": {
+    "1": {
+      "1": { "star": 1, "bad": false },
+      "2": { "star": 3, "bad": true },
+      "3": { "star": 8, "bad": false },
+      "4": { "star": 7, "bad": true },
+      "5": { "star": 2, "bad": false },
+      "6": { "star": 9, "bad": true },
+      "7": { "star": 4, "bad": false },
+      "8": { "star": 5, "bad": true }
+    },
+    "2": {
+      "1": { "star": 3, "bad": false },
+      "2": { "star": 5, "bad": true },
+      "3": { "star": 1, "bad": false },
+      "4": { "star": 9, "bad": false },
+      "5": { "star": 4, "bad": false },
+      "6": { "star": 2, "bad": true },
+      "7": { "star": 6, "bad": false },
+      "8": { "star": 7, "bad": false }
+    },
+    "3": {
+      "1": { "star": 2, "bad": false },
+      "2": { "star": 4, "bad": false },
+      "3": { "star": 9, "bad": true },
+      "4": { "star": 8, "bad": false },
+      "5": { "star": 3, "bad": false },
+      "6": { "star": 1, "bad": false },
+      "7": { "star": 5, "bad": true },
+      "8": { "star": 6, "bad": false }
+    },
+    "4": {
+      "1": { "star": 1, "bad": false },
+      "2": { "star": 3, "bad": false },
+      "3": { "star": 8, "bad": false },
+      "4": { "star": 7, "bad": true },
+      "5": { "star": 2, "bad": false },
+      "6": { "star": 9, "bad": false },
+      "7": { "star": 4, "bad": false },
+      "8": { "star": 5, "bad": true }
+    },
+    "5": {
+      "1": { "star": 9, "bad": false },
+      "2": { "star": 2, "bad": false },
+      "3": { "star": 7, "bad": false },
+      "4": { "star": 6, "bad": true },
+      "5": { "star": 1, "bad": false },
+      "6": { "star": 8, "bad": false },
+      "7": { "star": 3, "bad": false },
+      "8": { "star": 4, "bad": false }
+    },
+    "6": {
+      "1": { "star": 8, "bad": false },
+      "2": { "star": 1, "bad": false },
+      "3": { "star": 6, "bad": false },
+      "4": { "star": 5, "bad": true },
+      "5": { "star": 9, "bad": true },
+      "6": { "star": 7, "bad": false },
+      "7": { "star": 2, "bad": false },
+      "8": { "star": 3, "bad": true }
+    },
+    "7": {
+      "1": { "star": 7, "bad": false },
+      "2": { "star": 9, "bad": true },
+      "3": { "star": 5, "bad": true },
+      "4": { "star": 4, "bad": false },
+      "5": { "star": 8, "bad": false },
+      "6": { "star": 6, "bad": true },
+      "7": { "star": 1, "bad": true },
+      "8": { "star": 2, "bad": false }
+    },
+    "8": {
+      "1": { "star": 6, "bad": false },
+      "2": { "star": 8, "bad": true },
+      "3": { "star": 4, "bad": false },
+      "4": { "star": 3, "bad": false },
+      "5": { "star": 7, "bad": false },
+      "6": { "star": 5, "bad": true },
+      "7": { "star": 9, "bad": false },
+      "8": { "star": 1, "bad": false }
+    },
+    "9": {
+      "1": { "star": 5, "bad": true },
+      "2": { "star": 7, "bad": false },
+      "3": { "star": 3, "bad": false },
+      "4": { "star": 2, "bad": false },
+      "5": { "star": 6, "bad": true },
+      "6": { "star": 4, "bad": false },
+      "7": { "star": 8, "bad": true },
+      "8": { "star": 9, "bad": false }
+    },
+    "10": {
+      "1": { "star": 4, "bad": true },
+      "2": { "star": 6, "bad": false },
+      "3": { "star": 2, "bad": false },
+      "4": { "star": 1, "bad": true },
+      "5": { "star": 5, "bad": true },
+      "6": { "star": 3, "bad": false },
+      "7": { "star": 7, "bad": false },
+      "8": { "star": 8, "bad": true }
+    },
+    "11": {
+      "1": { "star": 3, "bad": false },
+      "2": { "star": 5, "bad": true },
+      "3": { "star": 1, "bad": false },
+      "4": { "star": 9, "bad": false },
+      "5": { "star": 4, "bad": false },
+      "6": { "star": 2, "bad": true },
+      "7": { "star": 6, "bad": false },
+      "8": { "star": 7, "bad": true }
+    },
+    "12": {
+      "1": { "star": 2, "bad": true },
+      "2": { "star": 4, "bad": false },
+      "3": { "star": 9, "bad": true },
+      "4": { "star": 8, "bad": false },
+      "5": { "star": 3, "bad": false },
+      "6": { "star": 1, "bad": false },
+      "7": { "star": 5, "bad": true },
+      "8": { "star": 6, "bad": false }
+    }
+  }
+}
