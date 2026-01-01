@@ -2,7 +2,7 @@
 
 ## ステータス
 
-承認済み（更新: 2024-12）
+承認済み（更新: 2025-01）
 
 ## コンテキスト
 
@@ -148,18 +148,24 @@ class CalculateKigakuUseCase {
 
 ---
 
-### 7. zodによる入力バリデーション（不採用）
+### 7. zodによる入力バリデーション（採用）
 
-**決定**: スキーマバリデーションライブラリではなく、APIルート内での手動バリデーションを採用。
+**決定**: Zodによるスキーマバリデーションを採用。
 
 **理由**:
 
-- バリデーション対象が2フィールドのみ（birthYear, birthMonth）
-- ルールがシンプル（整数の範囲チェック）
-- zodを追加するとバンドルサイズが増加
-- この規模では手動バリデーションが読みやすく保守しやすい
+- 方位計算機能の追加により、入力が複雑化（targetYear, persons配列）
+- 型安全なバリデーションと型推論の恩恵
+- Server Actionsでの入力検証に最適
+- shadcn/uiとの親和性（React Hook Form + Zod）
 
-**再検討のタイミング**: 入力が複雑になった場合（ネストしたオブジェクト、多数のフィールド、複雑なルール）。
+```typescript
+// presentation/validators/direction/index.ts
+export const directionRequestSchema = z.object({
+  targetYear: z.number().int().min(2024).max(2030),
+  persons: z.array(personInputSchema).min(1).max(5),
+});
+```
 
 ---
 
@@ -194,6 +200,31 @@ rules/
 - 各ルールを単独でテストしやすい
 - ルールは `statusDecider.ts` で集約
 - 既存コードを変更せずに新しいルールを追加可能
+
+---
+
+### 10. Server Actions（採用）
+
+**決定**: REST APIではなく、Next.js Server Actionsを採用。
+
+**理由**:
+
+- クライアントコンポーネントから直接サーバー関数を呼び出し可能
+- APIルートの定義・管理が不要
+- TypeScriptの型がエンドツーエンドで共有される
+- Next.js App Routerとの自然な統合
+
+```typescript
+// src/app/actions.ts
+"use server";
+
+export async function calculateDirections(input: DirectionRequest): Promise<ActionResult> {
+  const parsed = directionRequestSchema.safeParse(input);
+  // ...
+}
+```
+
+**トレードオフ**: 外部からのAPI呼び出しはできないが、このアプリでは不要。
 
 ---
 

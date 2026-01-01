@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted (Updated: 2024-12)
+Accepted (Updated: 2025-01)
 
 ## Context
 
@@ -148,18 +148,24 @@ class CalculateKigakuUseCase {
 
 ---
 
-### 7. Input Validation with Zod (NOT Adopted)
+### 7. Input Validation with Zod (Adopted)
 
-**Decision**: Use manual validation in API routes instead of schema validation libraries.
+**Decision**: Use Zod for schema validation.
 
 **Rationale**:
 
-- Only 2 fields to validate (birthYear, birthMonth)
-- Validation rules are simple (integer ranges)
-- Adding zod increases bundle size
-- Manual validation is readable and maintainable at this scale
+- Direction calculation feature added complexity (targetYear, persons array)
+- Type-safe validation with type inference
+- Ideal for Server Actions input validation
+- Great compatibility with shadcn/ui (React Hook Form + Zod)
 
-**When to reconsider**: If input complexity grows (nested objects, many fields, complex rules).
+```typescript
+// presentation/validators/direction/index.ts
+export const directionRequestSchema = z.object({
+  targetYear: z.number().int().min(2024).max(2030),
+  persons: z.array(personInputSchema).min(1).max(5),
+});
+```
 
 ---
 
@@ -194,6 +200,31 @@ rules/
 - Easy to test each rule in isolation
 - Rules are aggregated by `statusDecider.ts`
 - New rules can be added without modifying existing code
+
+---
+
+### 10. Server Actions (Adopted)
+
+**Decision**: Use Next.js Server Actions instead of REST API.
+
+**Rationale**:
+
+- Direct server function calls from client components
+- No need to define/manage API routes
+- End-to-end TypeScript type sharing
+- Natural integration with Next.js App Router
+
+```typescript
+// src/app/actions.ts
+"use server";
+
+export async function calculateDirections(input: DirectionRequest): Promise<ActionResult> {
+  const parsed = directionRequestSchema.safeParse(input);
+  // ...
+}
+```
+
+**Trade-off**: No external API access, but not needed for this app.
 
 ---
 

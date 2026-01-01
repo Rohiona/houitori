@@ -1,8 +1,15 @@
-# Houitori - 九星気学計算アプリ
+# Houitori - 九星気学 方位吉凶計算アプリ
 
 **[English](README.md)**
 
-生年月日から九星気学の本命星・月命星を計算するWebアプリケーションです。Next.js 16とTypeScriptで構築しています。
+生年月日から九星気学の本命星・月命星を計算し、年盤・月盤による方位の吉凶を判定するWebアプリケーションです。Next.js 16とTypeScriptで構築しています。
+
+## 機能
+
+- **本命星・月命星の計算**: 生年月日から九星を算出
+- **方位吉凶の判定**: 年盤・月盤それぞれで8方位の吉凶を表示
+- **複数人対応**: 最大5人まで同時に計算可能
+- **レスポンシブ対応**: PC・スマートフォン両対応
 
 ## 九星気学とは？
 
@@ -25,6 +32,9 @@
 - **フレームワーク**: Next.js 16 (App Router)
 - **言語**: TypeScript (strict mode)
 - **スタイリング**: Tailwind CSS v4
+- **UIコンポーネント**: shadcn/ui
+- **フォーム**: React Hook Form
+- **バリデーション**: Zod
 - **テスト**: Vitest
 - **フォーマッタ**: Prettier
 - **CI/CD**: GitHub Actions
@@ -39,81 +49,62 @@
 ### 開発環境の起動
 
 ```bash
-make dev      # 開発サーバーを起動
-make test     # テストを実行
-make lint     # Lintを実行
-make format   # Prettierでコードを整形
-make build    # 本番ビルド
+make setup   # Git hooks設定（初回のみ）
+make dev     # 開発サーバーを起動
+make test    # テストを実行
+make lint    # Lintを実行
+make format  # Prettierでコードを整形
+make build   # 本番ビルド
+make clean   # コンテナ・イメージ・ボリュームを削除
 ```
 
 アプリケーションは `http://localhost:3000` で利用できます。
 
-## APIエンドポイント
+## アーキテクチャ
 
-### GET /api/personal
+### Server Actions
 
-クエリパラメータから個人の星を計算します。
+計算処理はNext.jsのServer Actionsを使用しています。クライアントから計算ボタンを押すと、サーバーサイドで計算が実行されます。
 
-```bash
-curl "http://localhost:3000/api/personal?birthYear=1985&birthMonth=6"
-```
+```typescript
+// src/app/actions.ts
+"use server";
 
-### POST /api/personal
-
-JSONボディから個人の星を計算します。
-
-```bash
-curl -X POST http://localhost:3000/api/personal \
-  -H "Content-Type: application/json" \
-  -d '{"birthYear": 1985, "birthMonth": 6}'
-```
-
-**レスポンス:**
-
-```json
-{
-  "honmeiSei": 6,
-  "getsumeiSei": 1,
-  "honmeiName": "六白金星",
-  "getsumeiName": "一白水星"
+export async function calculateDirections(input: DirectionRequest): Promise<ActionResult> {
+  // バリデーション → データ読み込み → 計算 → 結果返却
 }
 ```
 
-## プロジェクト構成
+### プロジェクト構成
 
 クリーンアーキテクチャによる3層構造:
 
 ```
 src/
 ├── app/                                    # プレゼンテーション層 (Next.js)
-│   ├── api/personal/route.ts               # REST API (GET/POST)
+│   ├── actions.ts                          # Server Actions
+│   ├── components/                         # ページコンポーネント
 │   └── page.tsx                            # メインページ
+│
+├── data/                                   # 静的データ
+│   ├── boards/                             # 年盤・月盤データ (JSON)
+│   └── compatibility.json                  # 相性テーブル
 │
 └── modules/
     ├── domain/
     │   ├── shared/                         # 共有カーネル (StarNumber, Month)
-    │   │   ├── types/index.ts
-    │   │   └── index.ts                    # 公開API
-    │   │
     │   ├── personal/                       # 個人の星 (本命星・月命星)
-    │   │   ├── services/
-    │   │   │   ├── calculator.ts
-    │   │   │   └── starName.ts
-    │   │   ├── types/index.ts
-    │   │   └── index.ts                    # 公開API
-    │   │
-    │   └── direction/                      # 方位の吉凶
-    │       ├── rules/                      # ドメインルール（純粋関数）
-    │       ├── services/
-    │       ├── types/index.ts
-    │       └── index.ts                    # 公開API
+    │   └── direction/                      # 方位の吉凶 (rules/ + services/)
     │
     ├── application/
-    │   ├── dtos/direction/                 # DTO（API出力形式）
-    │   ├── services/direction/             # アプリケーションサービス
+    │   ├── dtos/                           # DTO（API出力形式）
+    │   ├── services/                       # アプリケーションサービス
     │   └── usecases/                       # ユースケース
     │
-    └── infrastructure/                     # インフラ層 (将来用)
+    ├── infrastructure/                     # データローダー
+    │
+    └── presentation/
+        └── validators/                     # 入力バリデーション (Zod)
 ```
 
 ### インポート規約

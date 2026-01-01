@@ -1,8 +1,15 @@
-# Houitori - Kigaku (Nine Star Ki) Calculator
+# Houitori - Nine Star Ki Direction Fortune Calculator
 
 **[日本語](README.ja.md)**
 
-A web application that calculates your Nine Star Ki (Kigaku) fortune based on your birth year and month. Built with Next.js 16 and TypeScript.
+A web application that calculates Nine Star Ki (Kigaku) fortune based on your birth year and month, and determines the fortune of eight directions using yearly and monthly star charts. Built with Next.js 16 and TypeScript.
+
+## Features
+
+- **Personal Star Calculation**: Calculate Honmei-sei and Getsumei-sei from birth date
+- **Direction Fortune**: Display fortune (good/bad) for 8 directions based on yearly and monthly charts
+- **Multi-person Support**: Calculate for up to 5 people simultaneously
+- **Responsive Design**: Works on both PC and mobile devices
 
 ## What is Nine Star Ki (Kigaku)?
 
@@ -25,6 +32,9 @@ The nine stars are:
 - **Framework**: Next.js 16 (App Router)
 - **Language**: TypeScript (strict mode)
 - **Styling**: Tailwind CSS v4
+- **UI Components**: shadcn/ui
+- **Forms**: React Hook Form
+- **Validation**: Zod
 - **Testing**: Vitest
 - **Formatter**: Prettier
 - **CI/CD**: GitHub Actions
@@ -39,81 +49,62 @@ The nine stars are:
 ### Development
 
 ```bash
-make dev      # Start development server
-make test     # Run tests
-make lint     # Run linter
-make format   # Format code with Prettier
-make build    # Production build
+make setup   # Configure git hooks (run after clone)
+make dev     # Start development server
+make test    # Run tests
+make lint    # Run linter
+make format  # Format code with Prettier
+make build   # Production build
+make clean   # Remove containers, images, volumes
 ```
 
 The application will be available at `http://localhost:3000`.
 
-## API Endpoints
+## Architecture
 
-### GET /api/personal
+### Server Actions
 
-Calculate personal stars from query parameters.
+Calculations are performed using Next.js Server Actions. When the user clicks the calculate button, the computation runs on the server side.
 
-```bash
-curl "http://localhost:3000/api/personal?birthYear=1985&birthMonth=6"
-```
+```typescript
+// src/app/actions.ts
+"use server";
 
-### POST /api/personal
-
-Calculate personal stars from JSON body.
-
-```bash
-curl -X POST http://localhost:3000/api/personal \
-  -H "Content-Type: application/json" \
-  -d '{"birthYear": 1985, "birthMonth": 6}'
-```
-
-**Response:**
-
-```json
-{
-  "honmeiSei": 6,
-  "getsumeiSei": 1,
-  "honmeiName": "六白金星",
-  "getsumeiName": "一白水星"
+export async function calculateDirections(input: DirectionRequest): Promise<ActionResult> {
+  // Validate → Load data → Calculate → Return result
 }
 ```
 
-## Project Structure
+### Project Structure
 
 Clean Architecture with three layers:
 
 ```
 src/
 ├── app/                                    # Presentation Layer (Next.js)
-│   ├── api/personal/route.ts               # REST API (GET/POST)
+│   ├── actions.ts                          # Server Actions
+│   ├── components/                         # Page components
 │   └── page.tsx                            # Main page
+│
+├── data/                                   # Static data
+│   ├── boards/                             # Yearly/monthly chart data (JSON)
+│   └── compatibility.json                  # Compatibility table
 │
 └── modules/
     ├── domain/
     │   ├── shared/                         # Shared Kernel (StarNumber, Month)
-    │   │   ├── types/index.ts
-    │   │   └── index.ts                    # Public API
-    │   │
-    │   ├── personal/                       # Personal star (本命星・月命星)
-    │   │   ├── services/
-    │   │   │   ├── calculator.ts
-    │   │   │   └── starName.ts
-    │   │   ├── types/index.ts
-    │   │   └── index.ts                    # Public API
-    │   │
-    │   └── direction/                      # Direction fortune (方位の吉凶)
-    │       ├── rules/                      # Domain rules (pure functions)
-    │       ├── services/
-    │       ├── types/index.ts
-    │       └── index.ts                    # Public API
+    │   ├── personal/                       # Personal star (Honmei/Getsumei)
+    │   └── direction/                      # Direction fortune (rules/ + services/)
     │
     ├── application/
-    │   ├── dtos/direction/                 # DTOs (API output format)
-    │   ├── services/direction/             # Application services
+    │   ├── dtos/                           # DTOs (API output format)
+    │   ├── services/                       # Application services
     │   └── usecases/                       # Use cases
     │
-    └── infrastructure/                     # Infrastructure Layer (future use)
+    ├── infrastructure/                     # Data loaders
+    │
+    └── presentation/
+        └── validators/                     # Input validation (Zod)
 ```
 
 ### Import Convention
