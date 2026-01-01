@@ -200,7 +200,7 @@ export function DirectionForm() {
                   type="button"
                   onClick={() => handleCalculate(index)}
                   disabled={pendingIndex !== null}
-                  className="w-16"
+                  className="w-16 disabled:opacity-100"
                 >
                   {pendingIndex === index ? <Loader2 className="size-4 animate-spin" /> : "計算"}
                 </Button>
