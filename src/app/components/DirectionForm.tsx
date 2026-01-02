@@ -173,6 +173,8 @@ export function DirectionForm() {
   const handleTargetYearChange = (value: string) => {
     const newYear = Number(value);
     form.setValue("targetYear", newYear);
+    // 対象年が変わったら結果をクリア（旧年の結果が混在しないように）
+    setResult(null);
     const firstPerson = persons[0];
     if (firstPerson) {
       saveFirstPersonData(newYear, firstPerson.birthYear, firstPerson.birthMonth);
@@ -218,7 +220,11 @@ export function DirectionForm() {
       {/* 対象年選択 */}
       <div className="space-y-2">
         <Label>{t.targetYear}</Label>
-        <Select value={String(targetYear)} onValueChange={handleTargetYearChange}>
+        <Select
+          value={String(targetYear)}
+          onValueChange={handleTargetYearChange}
+          disabled={pendingIndex !== null}
+        >
           <SelectTrigger className="w-32">
             <SelectValue />
           </SelectTrigger>
@@ -258,6 +264,8 @@ export function DirectionForm() {
                     variant="ghost"
                     size="sm"
                     onClick={() => handleRemove(index)}
+                    disabled={pendingIndex !== null}
+                    className="disabled:opacity-100"
                   >
                     {t.delete}
                   </Button>
@@ -271,6 +279,7 @@ export function DirectionForm() {
                   <Select
                     value={String(person.birthYear)}
                     onValueChange={(v) => handleBirthYearChange(index, v)}
+                    disabled={pendingIndex !== null}
                   >
                     <SelectTrigger className="w-28">
                       <SelectValue placeholder={t.selectPlaceholder} />
@@ -289,6 +298,7 @@ export function DirectionForm() {
                   <Select
                     value={String(person.birthMonth)}
                     onValueChange={(v) => handleBirthMonthChange(index, v)}
+                    disabled={pendingIndex !== null}
                   >
                     <SelectTrigger className="w-20">
                       <SelectValue placeholder={t.selectPlaceholder} />
@@ -330,6 +340,8 @@ export function DirectionForm() {
           type="button"
           variant="outline"
           onClick={() => append({ birthYear: defaultBirthYear, birthMonth: 1 })}
+          disabled={pendingIndex !== null}
+          className="disabled:opacity-100"
         >
           {t.add}
         </Button>

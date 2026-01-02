@@ -43,7 +43,16 @@ export async function calculateDirections(input: DirectionRequest): Promise<Acti
       error: `${parsed.data.targetYear}年の盤データがありません`,
     };
   }
-  const compatibility = getCompatibilityTable();
+
+  let compatibility;
+  try {
+    compatibility = getCompatibilityTable();
+  } catch {
+    return {
+      success: false,
+      error: "相性テーブルの読み込みに失敗しました",
+    };
+  }
 
   // 3. Orchestrate use cases
   const personalStarUseCase = new PersonalStarCalculationUseCase();
