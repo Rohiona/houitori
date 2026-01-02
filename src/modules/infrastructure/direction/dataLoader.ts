@@ -10,7 +10,11 @@ import type { BoardData, CompatibilityTable } from "@/modules/domain/direction";
  * @throws 該当年のデータがない場合はエラー
  */
 export function loadBoardData(year: number): BoardData {
-  const filePath = path.join(process.cwd(), "src/data/boards", `${year}.json`);
+  const filePath = path.join(
+    process.cwd(),
+    "src/modules/infrastructure/data/boards",
+    `${year}.json`
+  );
   try {
     const content = fs.readFileSync(filePath, "utf-8");
     return JSON.parse(content) as BoardData;
@@ -23,7 +27,7 @@ export function loadBoardData(year: number): BoardData {
  * 相性テーブルを取得
  */
 export function getCompatibilityTable(): CompatibilityTable {
-  const filePath = path.join(process.cwd(), "src/data/compatibility.json");
+  const filePath = path.join(process.cwd(), "src/modules/infrastructure/data/compatibility.json");
   const content = fs.readFileSync(filePath, "utf-8");
   return JSON.parse(content) as CompatibilityTable;
 }

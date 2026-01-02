@@ -2,16 +2,16 @@
 
 import { useForm, useFieldArray } from "react-hook-form";
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/app/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/app/components/ui/card";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Label } from "@/components/ui/label";
+} from "@/app/components/ui/select";
+import { Label } from "@/app/components/ui/label";
 import { Loader2 } from "lucide-react";
 import { calculateDirections } from "@/app/actions";
 import { STAR_NAMES, type StarNumber } from "@/modules/domain/shared";
@@ -20,7 +20,7 @@ import type {
   PersonDirectionResult,
 } from "@/modules/application/dtos/direction";
 import { DirectionTable } from "./DirectionTable";
-import { useI18n } from "@/lib/i18n";
+import { useI18n } from "@/modules/presentation/i18n";
 
 interface PersonInput {
   birthYear: number;

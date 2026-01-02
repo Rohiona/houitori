@@ -1,6 +1,6 @@
 "use client";
 
-import { useI18n, LanguageToggle } from "@/lib/i18n";
+import { useI18n, LanguageToggle } from "@/modules/presentation/i18n";
 import { DirectionForm } from "@/app/components/DirectionForm";
 import { HelpDialog } from "@/app/components/HelpDialog";
 

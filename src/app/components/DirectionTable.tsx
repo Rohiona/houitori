@@ -2,7 +2,7 @@
 
 import type { PersonDirectionResult, DirectionResult } from "@/modules/application/dtos/direction";
 import type { DirectionStatus, DirectionKey } from "@/modules/domain/direction";
-import { useI18n } from "@/lib/i18n";
+import { useI18n } from "@/modules/presentation/i18n";
 
 interface DirectionTableProps {
   person: PersonDirectionResult;

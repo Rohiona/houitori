@@ -8,8 +8,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { useI18n } from "@/lib/i18n";
+} from "@/app/components/ui/dialog";
+import { useI18n } from "@/modules/presentation/i18n";
 
 export function HelpDialog() {
   const { t } = useI18n();
