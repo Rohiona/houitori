@@ -9,7 +9,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/app/components/ui/dialog";
-import { useI18n } from "@/modules/presentation/i18n";
+import { useI18n } from "@/app/lib/i18n";
 
 export function HelpDialog() {
   const { t } = useI18n();

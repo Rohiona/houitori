@@ -20,7 +20,7 @@ import type {
   PersonDirectionResult,
 } from "@/modules/application/dtos/direction";
 import { DirectionTable } from "./DirectionTable";
-import { useI18n } from "@/modules/presentation/i18n";
+import { useI18n } from "@/app/lib/i18n";
 
 interface PersonInput {
   birthYear: number;
