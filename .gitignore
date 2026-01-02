@@ -26,6 +26,7 @@
 .idea/
 .pnpm-store/
 .serena/
+.review/
 
 # board data (copyright concerns)
 #/src/data/
