@@ -3,6 +3,7 @@
 import { useI18n, LanguageToggle } from "@/app/lib/i18n";
 import { DirectionForm } from "@/app/components/DirectionForm";
 import { HelpDialog } from "@/app/components/HelpDialog";
+import { ShareButtons } from "@/app/components/ShareButtons";
 
 export function HomePage() {
   const { t } = useI18n();
@@ -18,6 +19,7 @@ export function HomePage() {
           <HelpDialog />
         </div>
         <DirectionForm />
+        <ShareButtons />
       </main>
     </div>
   );

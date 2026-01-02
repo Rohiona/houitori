@@ -81,6 +81,12 @@ export const translations = {
     monthShokichiDesc: "150km～499kmまでの旅行に行ってもよい",
     monthKyoDesc: "150km～499kmまでの旅行に行かない方が良い",
     monthDaikyoDesc: "150km～499kmまでの旅行は行ってはいけない",
+
+    // Share
+    share: "シェア",
+    shareText: "九星気学で方位の吉凶を計算できるサイト",
+    copyUrl: "URLコピー",
+    copied: "コピー済",
   },
   en: {
     // Page
@@ -164,6 +170,12 @@ export const translations = {
     monthShokichiDesc: "Acceptable for trips 150-499km",
     monthKyoDesc: "Not recommended for trips 150-499km",
     monthDaikyoDesc: "Must avoid for trips 150-499km",
+
+    // Share
+    share: "Share",
+    shareText: "Calculate auspicious directions with Nine Star Ki",
+    copyUrl: "Copy URL",
+    copied: "Copied",
   },
 } as const;
 
