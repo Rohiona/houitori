@@ -20,6 +20,7 @@ import type {
   PersonDirectionResult,
 } from "@/modules/application/dtos/direction";
 import { DirectionTable } from "./DirectionTable";
+import { useI18n } from "@/lib/i18n";
 
 interface PersonInput {
   birthYear: number;
@@ -40,6 +41,7 @@ const months = Array.from({ length: 12 }, (_, i) => i + 1);
 const availableTargetYears = [2026]; // 盤データがある年のみ
 
 export function DirectionForm() {
+  const { t } = useI18n();
   const [pendingIndex, setPendingIndex] = useState<number | null>(null);
   const [result, setResult] = useState<DirectionApiResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -132,7 +134,7 @@ export function DirectionForm() {
     <div className="space-y-6">
       {/* 対象年選択 */}
       <div className="space-y-2">
-        <Label>対象年</Label>
+        <Label>{t.targetYear}</Label>
         <Select value={String(targetYear)} onValueChange={handleTargetYearChange}>
           <SelectTrigger className="w-32">
             <SelectValue />
@@ -140,7 +142,8 @@ export function DirectionForm() {
           <SelectContent>
             {availableTargetYears.map((year) => (
               <SelectItem key={year} value={String(year)}>
-                {year}年
+                {year}
+                {t.yearSuffix}
               </SelectItem>
             ))}
           </SelectContent>
@@ -158,7 +161,7 @@ export function DirectionForm() {
             <CardHeader className="pb-2">
               <CardTitle className="text-base flex items-center justify-between">
                 <span>
-                  {index + 1}人目
+                  {t.person(index + 1)}
                   {personResult && (
                     <span className="ml-2 font-normal text-muted-foreground">
                       （{getStarNameJa(personResult.honmeiSei)} /{" "}
@@ -173,7 +176,7 @@ export function DirectionForm() {
                     size="sm"
                     onClick={() => handleRemove(index)}
                   >
-                    削除
+                    {t.delete}
                   </Button>
                 )}
               </CardTitle>
@@ -181,13 +184,13 @@ export function DirectionForm() {
             <CardContent className="space-y-4">
               <div className="flex gap-4 items-end">
                 <div className="space-y-2">
-                  <Label>生年</Label>
+                  <Label>{t.birthYear}</Label>
                   <Select
                     value={String(person.birthYear)}
                     onValueChange={(v) => handleBirthYearChange(index, v)}
                   >
                     <SelectTrigger className="w-28">
-                      <SelectValue placeholder="選択" />
+                      <SelectValue placeholder={t.selectPlaceholder} />
                     </SelectTrigger>
                     <SelectContent>
                       {years.map((year) => (
@@ -199,18 +202,19 @@ export function DirectionForm() {
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label>生月</Label>
+                  <Label>{t.birthMonth}</Label>
                   <Select
                     value={String(person.birthMonth)}
                     onValueChange={(v) => handleBirthMonthChange(index, v)}
                   >
                     <SelectTrigger className="w-20">
-                      <SelectValue placeholder="選択" />
+                      <SelectValue placeholder={t.selectPlaceholder} />
                     </SelectTrigger>
                     <SelectContent>
                       {months.map((month) => (
                         <SelectItem key={month} value={String(month)}>
-                          {month}月
+                          {month}
+                          {t.monthSuffix}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -220,14 +224,18 @@ export function DirectionForm() {
                   type="button"
                   onClick={() => handleCalculate(index)}
                   disabled={pendingIndex !== null}
-                  className="w-16 disabled:opacity-100"
+                  className="w-20 disabled:opacity-100"
                 >
-                  {pendingIndex === index ? <Loader2 className="size-4 animate-spin" /> : "計算"}
+                  {pendingIndex === index ? (
+                    <Loader2 className="size-4 animate-spin" />
+                  ) : (
+                    t.calculate
+                  )}
                 </Button>
               </div>
 
               {/* 結果テーブル（同じカード内） */}
-              {personResult && <DirectionTable person={personResult} year={result!.year} />}
+              {personResult && <DirectionTable person={personResult} />}
             </CardContent>
           </Card>
         );
@@ -240,7 +248,7 @@ export function DirectionForm() {
           variant="outline"
           onClick={() => append({ birthYear: defaultBirthYear, birthMonth: 1 })}
         >
-          ＋ 追加
+          {t.add}
         </Button>
       )}
 
