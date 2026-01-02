@@ -3,7 +3,7 @@ import { z } from "zod";
 /**
  * 個人の生年月スキーマ
  */
-const personSchema = z.object({
+export const personSchema = z.object({
   birthYear: z.int().min(1900, "birthYear must be an integer >= 1900"),
   birthMonth: z
     .int()

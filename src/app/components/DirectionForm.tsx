@@ -1,7 +1,9 @@
 "use client";
 
 import { useForm, useFieldArray } from "react-hook-form";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
+import { z } from "zod";
+import { personSchema } from "@/modules/presentation/validators/direction";
 import { Button } from "@/app/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/app/components/ui/card";
 import {
@@ -40,11 +42,45 @@ const years = Array.from({ length: latestYear - oldestYear + 1 }, (_, i) => late
 const months = Array.from({ length: 12 }, (_, i) => i + 1);
 const availableTargetYears = [2026]; // 盤データがある年のみ
 
+const STORAGE_KEY = "houitori-form";
+
+const savedFormSchema = z
+  .object({
+    targetYear: z.number().int(),
+  })
+  .merge(personSchema);
+
+type SavedFormData = z.infer<typeof savedFormSchema>;
+
+function loadSavedData(): SavedFormData | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      return savedFormSchema.parse(parsed);
+    }
+  } catch {
+    // ignore parse/validation errors
+  }
+  return null;
+}
+
+function saveData(data: SavedFormData): void {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  } catch {
+    // ignore storage errors
+  }
+}
+
 export function DirectionForm() {
   const { t } = useI18n();
   const [pendingIndex, setPendingIndex] = useState<number | null>(null);
   const [result, setResult] = useState<DirectionApiResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const initializedRef = useRef(false);
 
   const form = useForm<FormData>({
     defaultValues: {
@@ -52,6 +88,19 @@ export function DirectionForm() {
       persons: [{ birthYear: defaultBirthYear, birthMonth: 1 }],
     },
   });
+
+  // localStorageから復元（初回マウント時のみ）
+  useEffect(() => {
+    if (initializedRef.current) return;
+    initializedRef.current = true;
+
+    const saved = loadSavedData();
+    if (saved) {
+      form.setValue("targetYear", saved.targetYear);
+      form.setValue("persons.0.birthYear", saved.birthYear);
+      form.setValue("persons.0.birthMonth", saved.birthMonth);
+    }
+  }, [form]);
 
   const {
     fields,
@@ -108,16 +157,50 @@ export function DirectionForm() {
     }
   };
 
+  // 一人目の入力値をlocalStorageに保存
+  const saveFirstPersonData = (
+    targetYearVal: number,
+    birthYearVal: number,
+    birthMonthVal: number
+  ) => {
+    saveData({
+      targetYear: targetYearVal,
+      birthYear: birthYearVal,
+      birthMonth: birthMonthVal,
+    });
+  };
+
   const handleTargetYearChange = (value: string) => {
-    form.setValue("targetYear", Number(value));
+    const newYear = Number(value);
+    form.setValue("targetYear", newYear);
+    const firstPerson = persons[0];
+    if (firstPerson) {
+      saveFirstPersonData(newYear, firstPerson.birthYear, firstPerson.birthMonth);
+    }
   };
 
   const handleBirthYearChange = (index: number, value: string) => {
-    form.setValue(`persons.${index}.birthYear`, Number(value));
+    const newBirthYear = Number(value);
+    form.setValue(`persons.${index}.birthYear`, newBirthYear);
+    // 一人目の場合のみ保存
+    if (index === 0) {
+      const firstPerson = persons[0];
+      if (firstPerson) {
+        saveFirstPersonData(targetYear, newBirthYear, firstPerson.birthMonth);
+      }
+    }
   };
 
   const handleBirthMonthChange = (index: number, value: string) => {
-    form.setValue(`persons.${index}.birthMonth`, Number(value));
+    const newBirthMonth = Number(value);
+    form.setValue(`persons.${index}.birthMonth`, newBirthMonth);
+    // 一人目の場合のみ保存
+    if (index === 0) {
+      const firstPerson = persons[0];
+      if (firstPerson) {
+        saveFirstPersonData(targetYear, firstPerson.birthYear, newBirthMonth);
+      }
+    }
   };
 
   const getStarNameJa = (star: StarNumber) => STAR_NAMES.ja[star];
