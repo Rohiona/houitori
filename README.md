@@ -4,6 +4,8 @@
 
 A web application that calculates Nine Star Ki (Kigaku) fortune based on your birth year and month, and determines the fortune of eight directions using yearly and monthly star charts. Built with Next.js 16 and TypeScript.
 
+**Live**: https://houitori.vercel.app/
+
 ## Features
 
 - **Personal Star Calculation**: Calculate Honmei-sei and Getsumei-sei from birth date
