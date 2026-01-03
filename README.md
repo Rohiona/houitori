@@ -39,8 +39,27 @@ The nine stars are:
 - **Validation**: Zod
 - **Testing**: Vitest
 - **Formatter**: Prettier
-- **CI/CD**: GitHub Actions
+- **CI/CD**: GitHub Actions (includes license check)
 - **Deployment**: Vercel
+
+## CI
+
+GitHub Actions runs the following checks:
+
+- Lint (ESLint)
+- Tests (Vitest)
+- Build (Next.js)
+- **License Check**: Ensures no GPL/Copyleft licensed packages are included
+
+### Blocked Licenses
+
+To ensure commercial and portfolio use, the following Copyleft licenses are blocked in CI:
+
+- GPL, GPL-2.0, GPL-3.0
+- LGPL, LGPL-2.0, LGPL-2.1, LGPL-3.0
+- AGPL, AGPL-3.0
+- CC-BY-SA
+- MPL-2.0
 
 ## Getting Started
 

@@ -39,8 +39,27 @@
 - **バリデーション**: Zod
 - **テスト**: Vitest
 - **フォーマッタ**: Prettier
-- **CI/CD**: GitHub Actions
+- **CI/CD**: GitHub Actions（ライセンスチェック含む）
 - **デプロイ**: Vercel
+
+## CI
+
+GitHub Actionsで以下をチェックしています：
+
+- Lint（ESLint）
+- テスト（Vitest）
+- ビルド（Next.js）
+- **ライセンスチェック**: GPL/Copyleft系ライセンスのパッケージが含まれていないことを確認
+
+### ブロックするライセンス
+
+商用利用・ポートフォリオ利用のため、以下のCopyleft系ライセンスを持つパッケージの追加をCIでブロックしています：
+
+- GPL, GPL-2.0, GPL-3.0
+- LGPL, LGPL-2.0, LGPL-2.1, LGPL-3.0
+- AGPL, AGPL-3.0
+- CC-BY-SA
+- MPL-2.0
 
 ## はじめに
 
