@@ -98,34 +98,42 @@ export async function calculateDirections(input: DirectionRequest): Promise<Acti
 
 ### Project Structure
 
-Clean Architecture with three layers:
+Feature-based + Clean Architecture:
 
 ```
 src/
-├── app/                                    # Presentation Layer (Next.js)
-│   ├── actions.ts                          # Server Actions
-│   ├── components/                         # Page components
-│   └── page.tsx                            # Main page
+├── app/                        # Next.js routing only
+│   ├── page.tsx                # Entry point (calls features)
+│   ├── layout.tsx
+│   └── providers.tsx
 │
-├── data/                                   # Static data
-│   ├── boards/                             # Yearly/monthly chart data (JSON)
-│   └── compatibility.json                  # Compatibility table
+├── features/                   # Feature modules (UI + API)
+│   ├── home/ui/                # Home screen components
+│   └── directions/search/      # Direction search feature
+│       ├── ui/                 # React components
+│       └── api/                # Server Actions
 │
-└── modules/
+├── shared/                     # Cross-cutting concerns
+│   ├── ui/                     # shadcn/ui components
+│   ├── lib/                    # Utilities (i18n, cn)
+│   └── hooks/                  # Shared hooks
+│
+└── core/                       # Business logic (Clean Architecture)
     ├── domain/
-    │   ├── shared/                         # Shared Kernel (StarNumber, Month)
-    │   ├── personal/                       # Personal star (Honmei/Getsumei)
-    │   └── direction/                      # Direction fortune (rules/ + services/)
+    │   ├── shared/             # Shared Kernel (StarNumber, Month)
+    │   ├── personal/           # Personal star (Honmei/Getsumei)
+    │   └── direction/          # Direction fortune (rules/)
     │
     ├── application/
-    │   ├── dtos/                           # DTOs (API output format)
-    │   ├── services/                       # Application services
-    │   └── usecases/                       # Use cases
+    │   ├── dtos/               # Data Transfer Objects
+    │   ├── services/           # Application services
+    │   └── usecases/           # Use cases
     │
-    ├── infrastructure/                     # Data loaders
+    ├── infrastructure/
+    │   └── data/               # JSON data files
     │
     └── presentation/
-        └── validators/                     # Input validation (Zod)
+        └── validators/         # Input validation (Zod)
 ```
 
 ### Import Convention
@@ -134,11 +142,11 @@ Application layer imports from Domain public API (`index.ts`):
 
 ```typescript
 // Good: Import from public API
-import { calculateHonmeiSei, type Month } from "@/modules/domain/personal";
-import { decideDirectionStatus, type BoardData } from "@/modules/domain/direction";
+import { calculateHonmeiSei, type Month } from "@/core/domain/personal";
+import { decideDirectionStatus, type BoardData } from "@/core/domain/direction";
 
 // Avoid: Deep imports (except for tests)
-import { calculateHonmeiSei } from "@/modules/domain/personal/services/calculator";
+import { calculateHonmeiSei } from "@/core/domain/personal/services/calculator";
 ```
 
 ## License

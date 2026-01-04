@@ -2,7 +2,7 @@
 
 import type { ReactNode } from "react";
 
-import { I18nProvider } from "@/app/lib/i18n";
+import { I18nProvider } from "@/shared/lib/i18n";
 
 export function Providers({ children }: { children: ReactNode }) {
   return <I18nProvider>{children}</I18nProvider>;

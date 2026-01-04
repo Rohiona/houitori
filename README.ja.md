@@ -98,34 +98,42 @@ export async function calculateDirections(input: DirectionRequest): Promise<Acti
 
 ### プロジェクト構成
 
-クリーンアーキテクチャによる3層構造:
+Feature-based + クリーンアーキテクチャ:
 
 ```
 src/
-├── app/                                    # プレゼンテーション層 (Next.js)
-│   ├── actions.ts                          # Server Actions
-│   ├── components/                         # ページコンポーネント
-│   └── page.tsx                            # メインページ
+├── app/                        # Next.js ルーティング専用
+│   ├── page.tsx                # エントリポイント（featuresを呼ぶだけ）
+│   ├── layout.tsx
+│   └── providers.tsx
 │
-├── data/                                   # 静的データ
-│   ├── boards/                             # 年盤・月盤データ (JSON)
-│   └── compatibility.json                  # 相性テーブル
+├── features/                   # 機能モジュール（UI + API）
+│   ├── home/ui/                # ホーム画面コンポーネント
+│   └── directions/search/      # 方位検索機能
+│       ├── ui/                 # Reactコンポーネント
+│       └── api/                # Server Actions
 │
-└── modules/
+├── shared/                     # 横断的関心事
+│   ├── ui/                     # shadcn/ui コンポーネント
+│   ├── lib/                    # ユーティリティ（i18n, cn）
+│   └── hooks/                  # 共有フック
+│
+└── core/                       # ビジネスロジック（クリーンアーキテクチャ）
     ├── domain/
-    │   ├── shared/                         # 共有カーネル (StarNumber, Month)
-    │   ├── personal/                       # 個人の星 (本命星・月命星)
-    │   └── direction/                      # 方位の吉凶 (rules/ + services/)
+    │   ├── shared/             # 共有カーネル (StarNumber, Month)
+    │   ├── personal/           # 個人の星（本命星・月命星）
+    │   └── direction/          # 方位の吉凶（rules/）
     │
     ├── application/
-    │   ├── dtos/                           # DTO（API出力形式）
-    │   ├── services/                       # アプリケーションサービス
-    │   └── usecases/                       # ユースケース
+    │   ├── dtos/               # Data Transfer Objects
+    │   ├── services/           # アプリケーションサービス
+    │   └── usecases/           # ユースケース
     │
-    ├── infrastructure/                     # データローダー
+    ├── infrastructure/
+    │   └── data/               # JSONデータファイル
     │
     └── presentation/
-        └── validators/                     # 入力バリデーション (Zod)
+        └── validators/         # 入力バリデーション (Zod)
 ```
 
 ### インポート規約
@@ -134,11 +142,11 @@ Application層はDomainの公開API（`index.ts`）経由でインポート:
 
 ```typescript
 // Good: 公開API経由でインポート
-import { calculateHonmeiSei, type Month } from "@/modules/domain/personal";
-import { decideDirectionStatus, type BoardData } from "@/modules/domain/direction";
+import { calculateHonmeiSei, type Month } from "@/core/domain/personal";
+import { decideDirectionStatus, type BoardData } from "@/core/domain/direction";
 
 // Avoid: 深いパスでのインポート（テスト以外）
-import { calculateHonmeiSei } from "@/modules/domain/personal/services/calculator";
+import { calculateHonmeiSei } from "@/core/domain/personal/services/calculator";
 ```
 
 ## ライセンス
