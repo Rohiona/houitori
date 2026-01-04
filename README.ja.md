@@ -83,6 +83,17 @@ make clean   # コンテナ・イメージ・ボリュームを削除
 
 ## アーキテクチャ
 
+### 設計方針
+
+本プロジェクトは**二軸構造**を採用しています：
+
+- **features/**: UI文脈のコード（コンポーネント、Server Actions、バリデーション）をユースケース単位で整理
+- **core/**: クリーンアーキテクチャに基づくビジネスロジック（ドメインルールは純粋に保つ）
+- **shared/**: 横断的なUIプリミティブ（shadcn/ui）とユーティリティ
+- **app/**: Next.jsルーティング専用（composition最小化）
+
+重要なルール：`features` → `core/application` → `core/domain`。featuresがdomainを直接参照しないことで、ビジネスロジックをUI非依存かつテスト可能に保ちます。
+
 ### Server Actions
 
 計算処理はNext.jsのServer Actionsを使用しています。クライアントから計算ボタンを押すと、サーバーサイドで計算が実行されます。

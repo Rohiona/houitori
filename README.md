@@ -83,6 +83,17 @@ The application will be available at `http://localhost:3000`.
 
 ## Architecture
 
+### Design Philosophy
+
+This project uses a **two-axis structure** to keep concerns separated:
+
+- **features/**: UI-centric code (components, Server Actions, validation) organized by use case
+- **core/**: Business logic following Clean Architecture (domain rules stay pure)
+- **shared/**: Cross-cutting UI primitives (shadcn/ui) and utilities
+- **app/**: Next.js routing only (minimal composition)
+
+The key rule: `features` → `core/application` → `core/domain`. Features never import domain directly, ensuring business logic remains UI-agnostic and testable.
+
 ### Server Actions
 
 Calculations are performed using Next.js Server Actions. When the user clicks the calculate button, the computation runs on the server side.
