@@ -67,7 +67,14 @@ To ensure commercial and portfolio use, the following Copyleft licenses are bloc
 
 - Docker and Docker Compose
 
-### Development
+### Development (without Docker)
+
+```bash
+pnpm install
+pnpm dev
+```
+
+### Development (with Docker)
 
 ```bash
 make setup   # Configure git hooks (run after clone)
@@ -99,7 +106,7 @@ The key rule: `features` → `core/application` → `core/domain`. Features neve
 Calculations are performed using Next.js Server Actions. When the user clicks the calculate button, the computation runs on the server side.
 
 ```typescript
-// src/app/actions.ts
+// src/features/directions/search/api/calculateDirectionsAction.ts
 "use server";
 
 export async function calculateDirections(input: DirectionRequest): Promise<ActionResult> {

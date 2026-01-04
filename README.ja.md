@@ -67,7 +67,14 @@ GitHub Actionsで以下をチェックしています：
 
 - Docker および Docker Compose
 
-### 開発環境の起動
+### 開発環境の起動（Docker不要）
+
+```bash
+pnpm install
+pnpm dev
+```
+
+### 開発環境の起動（Docker使用）
 
 ```bash
 make setup   # Git hooks設定（初回のみ）
@@ -99,7 +106,7 @@ make clean   # コンテナ・イメージ・ボリュームを削除
 計算処理はNext.jsのServer Actionsを使用しています。クライアントから計算ボタンを押すと、サーバーサイドで計算が実行されます。
 
 ```typescript
-// src/app/actions.ts
+// src/features/directions/search/api/calculateDirectionsAction.ts
 "use server";
 
 export async function calculateDirections(input: DirectionRequest): Promise<ActionResult> {
