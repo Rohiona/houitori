@@ -3,14 +3,15 @@
 import { useForm, useFieldArray } from "react-hook-form";
 import { useState, useEffect, useRef } from "react";
 import { z } from "zod";
-import { personSchema } from "@/core/presentation/validators/direction";
+import { personSchema } from "../model/validation";
 import { Button } from "@/shared/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/ui/select";
 import { Label } from "@/shared/ui/label";
 import { Loader2 } from "lucide-react";
 import { calculateDirections } from "../api/calculateDirectionsAction";
-import { STAR_NAMES, type StarNumber } from "@/core/domain/shared";
+import { STAR_NAMES } from "@/shared/lib/starNames";
+import type { StarNumber } from "@/core/application/dtos/direction";
 import type {
   DirectionApiResponse,
   PersonDirectionResult,

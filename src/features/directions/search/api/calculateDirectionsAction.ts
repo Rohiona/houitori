@@ -1,10 +1,7 @@
 "use server";
 
-import type { Month } from "@/core/domain/personal";
-import {
-  directionRequestSchema,
-  type DirectionRequest,
-} from "@/core/presentation/validators/direction";
+import type { Month } from "@/core/application/dtos/direction";
+import { directionRequestSchema, type DirectionRequest } from "../model/validation";
 import { PersonalStarCalculationUseCase } from "@/core/application/usecases/PersonalStarCalculationUseCase";
 import { DirectionCalculationUseCase } from "@/core/application/usecases/DirectionCalculationUseCase";
 import { loadBoardData, getCompatibilityTable } from "@/core/infrastructure/direction/dataLoader";

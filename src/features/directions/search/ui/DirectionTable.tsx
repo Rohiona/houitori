@@ -1,7 +1,7 @@
 "use client";
 
 import type { PersonDirectionResult, DirectionResult } from "@/core/application/dtos/direction";
-import type { DirectionStatus, DirectionKey } from "@/core/domain/direction";
+import type { DirectionStatus, DirectionKey } from "@/core/application/dtos/direction";
 import { useI18n } from "@/shared/lib/i18n";
 
 interface DirectionTableProps {

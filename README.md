@@ -125,28 +125,29 @@ src/
     │   └── direction/          # Direction fortune (rules/)
     │
     ├── application/
-    │   ├── dtos/               # Data Transfer Objects
+    │   ├── dtos/               # Data Transfer Objects (+ type re-exports)
     │   ├── services/           # Application services
     │   └── usecases/           # Use cases
     │
-    ├── infrastructure/
-    │   └── data/               # JSON data files
-    │
-    └── presentation/
-        └── validators/         # Input validation (Zod)
+    └── infrastructure/
+        └── data/               # JSON data files
 ```
 
 ### Import Convention
 
-Application layer imports from Domain public API (`index.ts`):
+Features import from application layer (not domain directly):
 
 ```typescript
-// Good: Import from public API
-import { calculateHonmeiSei, type Month } from "@/core/domain/personal";
-import { decideDirectionStatus, type BoardData } from "@/core/domain/direction";
+// Good: features → core/application
+import { DirectionCalculationUseCase } from "@/core/application/usecases/DirectionCalculationUseCase";
+import type { DirectionResult, StarNumber } from "@/core/application/dtos/direction";
 
-// Avoid: Deep imports (except for tests)
-import { calculateHonmeiSei } from "@/core/domain/personal/services/calculator";
+// Good: features → shared
+import { useI18n } from "@/shared/lib/i18n";
+import { Button } from "@/shared/ui/button";
+
+// Avoid: features → core/domain (direct access)
+import { calculateHonmeiSei } from "@/core/domain/personal";
 ```
 
 ## License

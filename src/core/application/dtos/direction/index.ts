@@ -5,6 +5,10 @@
  * Domain層のビジネスロジックとは独立した、表示・出力用の構造
  */
 
+// Re-export domain types for feature layer consumption
+export type { StarNumber, Month } from "@/core/domain/shared";
+export type { DirectionKey, DirectionStatus } from "@/core/domain/direction";
+
 import type { StarNumber } from "@/core/domain/shared";
 import type { DirectionKey, DirectionStatus } from "@/core/domain/direction";
 

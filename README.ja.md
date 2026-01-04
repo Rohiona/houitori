@@ -125,28 +125,29 @@ src/
     │   └── direction/          # 方位の吉凶（rules/）
     │
     ├── application/
-    │   ├── dtos/               # Data Transfer Objects
+    │   ├── dtos/               # Data Transfer Objects（型の再エクスポート含む）
     │   ├── services/           # アプリケーションサービス
     │   └── usecases/           # ユースケース
     │
-    ├── infrastructure/
-    │   └── data/               # JSONデータファイル
-    │
-    └── presentation/
-        └── validators/         # 入力バリデーション (Zod)
+    └── infrastructure/
+        └── data/               # JSONデータファイル
 ```
 
 ### インポート規約
 
-Application層はDomainの公開API（`index.ts`）経由でインポート:
+featuresはapplication層経由でインポート（domain直接参照は禁止）:
 
 ```typescript
-// Good: 公開API経由でインポート
-import { calculateHonmeiSei, type Month } from "@/core/domain/personal";
-import { decideDirectionStatus, type BoardData } from "@/core/domain/direction";
+// Good: features → core/application
+import { DirectionCalculationUseCase } from "@/core/application/usecases/DirectionCalculationUseCase";
+import type { DirectionResult, StarNumber } from "@/core/application/dtos/direction";
 
-// Avoid: 深いパスでのインポート（テスト以外）
-import { calculateHonmeiSei } from "@/core/domain/personal/services/calculator";
+// Good: features → shared
+import { useI18n } from "@/shared/lib/i18n";
+import { Button } from "@/shared/ui/button";
+
+// Avoid: features → core/domain（直接参照禁止）
+import { calculateHonmeiSei } from "@/core/domain/personal";
 ```
 
 ## ライセンス
